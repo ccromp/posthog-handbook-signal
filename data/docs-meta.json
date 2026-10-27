@@ -1,0 +1,913 @@
+{
+  "cats": [
+    {
+      "name": "Product positioning",
+      "section": "Marketing"
+    },
+    {
+      "name": "Overview",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "New business",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "Product-led sales",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "Customer Success",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "Forward deployed engineering",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "Shareable guides",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "Onboarding",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "Use-case selling",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "Cross-selling",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "Account management",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "Contracts & billing",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "Tools & systems",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "Enablement & resources",
+      "section": "Sales, CS & Onboarding"
+    },
+    {
+      "name": "Working with customers in person",
+      "section": "Sales, CS & Onboarding"
+    }
+  ],
+  "docs": [
+    {
+      "id": "error-tracking",
+      "title": "Error tracking",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/how-we-position-and-sell/error-tracking.md",
+      "url": "/handbook/marketing/how-we-position-and-sell/error-tracking"
+    },
+    {
+      "id": "logs",
+      "title": "Logs",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/how-we-position-and-sell/logs.md",
+      "url": "/handbook/marketing/how-we-position-and-sell/logs"
+    },
+    {
+      "id": "workflows",
+      "title": "Workflows",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/how-we-position-and-sell/workflows.md",
+      "url": "/handbook/marketing/how-we-position-and-sell/workflows"
+    },
+    {
+      "id": "session-replay",
+      "title": "Session replay",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/positioning/session-replay.md",
+      "url": "/handbook/marketing/positioning/session-replay"
+    },
+    {
+      "id": "analytics",
+      "title": "Analytics",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/positioning/analytics.md",
+      "url": "/handbook/marketing/positioning/analytics"
+    },
+    {
+      "id": "feature-flags",
+      "title": "Feature flags",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/positioning/feature-flags.md",
+      "url": "/handbook/marketing/positioning/feature-flags"
+    },
+    {
+      "id": "experiments",
+      "title": "Experiments",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/positioning/experiments.md",
+      "url": "/handbook/marketing/positioning/experiments"
+    },
+    {
+      "id": "llm-analytics",
+      "title": "AI Observability",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/positioning/llm-analytics.md",
+      "url": "/handbook/marketing/positioning/llm-analytics"
+    },
+    {
+      "id": "posthog-ai",
+      "title": "PostHog AI",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/positioning/posthog-ai.md",
+      "url": "/handbook/marketing/positioning/posthog-ai"
+    },
+    {
+      "id": "data-warehouse",
+      "title": "Context warehouse",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/positioning/data-warehouse.md",
+      "url": "/handbook/marketing/positioning/data-warehouse"
+    },
+    {
+      "id": "data-pipelines",
+      "title": "Data pipelines",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/positioning/data-pipelines.md",
+      "url": "/handbook/marketing/positioning/data-pipelines"
+    },
+    {
+      "id": "replay-vision",
+      "title": "Replay vision",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/positioning/replay-vision.md",
+      "url": "/handbook/marketing/positioning/replay-vision"
+    },
+    {
+      "id": "desktop",
+      "title": "PostHog Desktop",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/positioning/desktop.md",
+      "url": "/handbook/marketing/positioning/desktop"
+    },
+    {
+      "id": "endpoints",
+      "title": "Endpoints",
+      "cat": "Product positioning",
+      "path": "contents/handbook/marketing/positioning/endpoints.md",
+      "url": "/handbook/marketing/positioning/endpoints"
+    },
+    {
+      "id": "growth/sales/accounts-overview",
+      "title": "Accounts overview",
+      "cat": "Overview",
+      "path": "contents/handbook/growth/sales/accounts-overview.md",
+      "url": "/handbook/growth/sales/accounts-overview"
+    },
+    {
+      "id": "growth/sales/overview",
+      "title": "Overview",
+      "cat": "Overview",
+      "path": "contents/handbook/growth/sales/overview.md",
+      "url": "/handbook/growth/sales/overview"
+    },
+    {
+      "id": "growth/sales/csm-tam-overlay-coverage",
+      "title": "CSM and TAM dual coverage",
+      "cat": "Overview",
+      "path": "contents/handbook/growth/sales/csm-tam-overlay-coverage.md",
+      "url": "/handbook/growth/sales/csm-tam-overlay-coverage"
+    },
+    {
+      "id": "growth/sales/team-leads",
+      "title": "Team leads",
+      "cat": "Overview",
+      "path": "contents/handbook/growth/sales/team-leads.md",
+      "url": "/handbook/growth/sales/team-leads"
+    },
+    {
+      "id": "growth/sales/who-we-do-business-with",
+      "title": "Who we do business with",
+      "cat": "Overview",
+      "path": "contents/handbook/growth/sales/who-we-do-business-with.md",
+      "url": "/handbook/growth/sales/who-we-do-business-with"
+    },
+    {
+      "id": "growth/sales/new-business-how-we-work",
+      "title": "How we work",
+      "cat": "New business",
+      "path": "contents/handbook/growth/sales/new-business-how-we-work.md",
+      "url": "/handbook/growth/sales/new-business-how-we-work"
+    },
+    {
+      "id": "growth/sales/why-buy-posthog",
+      "title": "Why buy PostHog",
+      "cat": "New business",
+      "path": "contents/handbook/growth/sales/why-buy-posthog.md",
+      "url": "/handbook/growth/sales/why-buy-posthog"
+    },
+    {
+      "id": "growth/sales/new-sales",
+      "title": "New business sales",
+      "cat": "New business",
+      "path": "contents/handbook/growth/sales/new-sales.md",
+      "url": "/handbook/growth/sales/new-sales"
+    },
+    {
+      "id": "growth/sales/outbound-sales",
+      "title": "Outbound sales",
+      "cat": "New business",
+      "path": "contents/handbook/growth/sales/outbound-sales.md",
+      "url": "/handbook/growth/sales/outbound-sales"
+    },
+    {
+      "id": "growth/sales/how-to-do-discovery",
+      "title": "How to do discovery",
+      "cat": "New business",
+      "path": "contents/handbook/growth/sales/how-to-do-discovery.md",
+      "url": "/handbook/growth/sales/how-to-do-discovery"
+    },
+    {
+      "id": "growth/sales/running-trials",
+      "title": "Running trials",
+      "cat": "New business",
+      "path": "contents/handbook/growth/sales/running-trials.md",
+      "url": "/handbook/growth/sales/running-trials"
+    },
+    {
+      "id": "growth/sales/selling-via-aws",
+      "title": "Selling and procuring via AWS Marketplace",
+      "cat": "New business",
+      "path": "contents/handbook/growth/sales/selling-via-aws.md",
+      "url": "/handbook/growth/sales/selling-via-aws"
+    },
+    {
+      "id": "growth/sales/utilization-by-business-type",
+      "title": "Utilization by business type",
+      "cat": "New business",
+      "path": "contents/handbook/growth/sales/utilization-by-business-type.md",
+      "url": "/handbook/growth/sales/utilization-by-business-type"
+    },
+    {
+      "id": "growth/sales/professional-services",
+      "title": "Professional services",
+      "cat": "New business",
+      "path": "contents/handbook/growth/sales/professional-services.md",
+      "url": "/handbook/growth/sales/professional-services"
+    },
+    {
+      "id": "growth/sales/new-hire-onboarding",
+      "title": "New team member onboarding",
+      "cat": "New business",
+      "path": "contents/handbook/growth/sales/new-hire-onboarding.md",
+      "url": "/handbook/growth/sales/new-hire-onboarding"
+    },
+    {
+      "id": "growth/sales/how-we-work",
+      "title": "How we work",
+      "cat": "Product-led sales",
+      "path": "contents/handbook/growth/sales/how-we-work.md",
+      "url": "/handbook/growth/sales/how-we-work"
+    },
+    {
+      "id": "growth/sales/product-led-sales",
+      "title": "Product-led sales",
+      "cat": "Product-led sales",
+      "path": "contents/handbook/growth/sales/product-led-sales.md",
+      "url": "/handbook/growth/sales/product-led-sales"
+    },
+    {
+      "id": "growth/sales/product-led-lead-qualification",
+      "title": "PLG lead qualification",
+      "cat": "Product-led sales",
+      "path": "contents/handbook/growth/sales/product-led-lead-qualification.md",
+      "url": "/handbook/growth/sales/product-led-lead-qualification"
+    },
+    {
+      "id": "growth/sales/how-to-pitch-self-driving",
+      "title": "How to pitch self-driving",
+      "cat": "Product-led sales",
+      "path": "contents/handbook/growth/sales/how-to-pitch-self-driving.md",
+      "url": "/handbook/growth/sales/how-to-pitch-self-driving"
+    },
+    {
+      "id": "growth/sales/reverse-demo-calls",
+      "title": "Reverse demo calls",
+      "cat": "Product-led sales",
+      "path": "contents/handbook/growth/sales/reverse-demo-calls.md",
+      "url": "/handbook/growth/sales/reverse-demo-calls"
+    },
+    {
+      "id": "growth/sales/expansion-and-retention",
+      "title": "Expansion, cross-sell & retention",
+      "cat": "Product-led sales",
+      "path": "contents/handbook/growth/sales/expansion-and-retention.md",
+      "url": "/handbook/growth/sales/expansion-and-retention"
+    },
+    {
+      "id": "growth/sales/expansion-strategies",
+      "title": "Expansion strategies",
+      "cat": "Product-led sales",
+      "path": "contents/handbook/growth/sales/expansion-strategies.md",
+      "url": "/handbook/growth/sales/expansion-strategies"
+    },
+    {
+      "id": "growth/sales/evaluating-growth-potential",
+      "title": "Evaluating an account's growth potential",
+      "cat": "Product-led sales",
+      "path": "contents/handbook/growth/sales/evaluating-growth-potential.md",
+      "url": "/handbook/growth/sales/evaluating-growth-potential"
+    },
+    {
+      "id": "growth/sales/tam-excellence",
+      "title": "TAM Excellence",
+      "cat": "Product-led sales",
+      "path": "contents/handbook/growth/sales/tam-excellence.md",
+      "url": "/handbook/growth/sales/tam-excellence"
+    },
+    {
+      "id": "growth/sales/getting-people-to-talk-to-you",
+      "title": "Getting people to talk to you",
+      "cat": "Product-led sales",
+      "path": "contents/handbook/growth/sales/getting-people-to-talk-to-you.md",
+      "url": "/handbook/growth/sales/getting-people-to-talk-to-you"
+    },
+    {
+      "id": "cs-and-onboarding/customer-success",
+      "title": "Overview",
+      "cat": "Customer Success",
+      "path": "contents/handbook/cs-and-onboarding/customer-success.md",
+      "url": "/handbook/cs-and-onboarding/customer-success"
+    },
+    {
+      "id": "cs-and-onboarding/how-we-work",
+      "title": "How we work",
+      "cat": "Customer Success",
+      "path": "contents/handbook/cs-and-onboarding/how-we-work.md",
+      "url": "/handbook/cs-and-onboarding/how-we-work"
+    },
+    {
+      "id": "cs-and-onboarding/new-hire-onboarding",
+      "title": "New starters",
+      "cat": "Customer Success",
+      "path": "contents/handbook/cs-and-onboarding/new-hire-onboarding.md",
+      "url": "/handbook/cs-and-onboarding/new-hire-onboarding"
+    },
+    {
+      "id": "cs-and-onboarding/new-hire-onboarding-team-leads",
+      "title": "Team leads",
+      "cat": "Customer Success",
+      "path": "contents/handbook/cs-and-onboarding/new-hire-onboarding-team-leads.md",
+      "url": "/handbook/cs-and-onboarding/new-hire-onboarding-team-leads"
+    },
+    {
+      "id": "cs-and-onboarding/getting-started-with-customers",
+      "title": "Newly assigned customers",
+      "cat": "Customer Success",
+      "path": "contents/handbook/cs-and-onboarding/getting-started-with-customers.md",
+      "url": "/handbook/cs-and-onboarding/getting-started-with-customers"
+    },
+    {
+      "id": "cs-and-onboarding/lifecycle-csm",
+      "title": "Engagement lifecycle",
+      "cat": "Customer Success",
+      "path": "contents/handbook/cs-and-onboarding/lifecycle-csm.md",
+      "url": "/handbook/cs-and-onboarding/lifecycle-csm"
+    },
+    {
+      "id": "cs-and-onboarding/engaging-unengaged-customers",
+      "title": "Unengaged customers",
+      "cat": "Customer Success",
+      "path": "contents/handbook/cs-and-onboarding/engaging-unengaged-customers.md",
+      "url": "/handbook/cs-and-onboarding/engaging-unengaged-customers"
+    },
+    {
+      "id": "cs-and-onboarding/cost-optimization",
+      "title": "Cost optimization",
+      "cat": "Customer Success",
+      "path": "contents/handbook/cs-and-onboarding/cost-optimization.md",
+      "url": "/handbook/cs-and-onboarding/cost-optimization"
+    },
+    {
+      "id": "cs-and-onboarding/how-we-use-automation",
+      "title": "How we use automation",
+      "cat": "Customer Success",
+      "path": "contents/handbook/cs-and-onboarding/how-we-use-automation.md",
+      "url": "/handbook/cs-and-onboarding/how-we-use-automation"
+    },
+    {
+      "id": "cs-and-onboarding/using-ai-to-analyze-customer-issues",
+      "title": "Analyzing customer issues",
+      "cat": "Customer Success",
+      "path": "contents/handbook/cs-and-onboarding/using-ai-to-analyze-customer-issues.md",
+      "url": "/handbook/cs-and-onboarding/using-ai-to-analyze-customer-issues"
+    },
+    {
+      "id": "forward-deployed-engineering/overview",
+      "title": "Overview",
+      "cat": "Forward deployed engineering",
+      "path": "contents/handbook/forward-deployed-engineering/overview.md",
+      "url": "/handbook/forward-deployed-engineering/overview"
+    },
+    {
+      "id": "forward-deployed-engineering/who-we-work-with",
+      "title": "Who we work with",
+      "cat": "Forward deployed engineering",
+      "path": "contents/handbook/forward-deployed-engineering/who-we-work-with.md",
+      "url": "/handbook/forward-deployed-engineering/who-we-work-with"
+    },
+    {
+      "id": "forward-deployed-engineering/how-we-work",
+      "title": "How we work",
+      "cat": "Forward deployed engineering",
+      "path": "contents/handbook/forward-deployed-engineering/how-we-work.md",
+      "url": "/handbook/forward-deployed-engineering/how-we-work"
+    },
+    {
+      "id": "forward-deployed-engineering/how-to-get-fde-involved",
+      "title": "How to get an FDE involved",
+      "cat": "Forward deployed engineering",
+      "path": "contents/handbook/forward-deployed-engineering/how-to-get-fde-involved.md",
+      "url": "/handbook/forward-deployed-engineering/how-to-get-fde-involved"
+    },
+    {
+      "id": "forward-deployed-engineering/working-with-ai",
+      "title": "How we work with AI",
+      "cat": "Forward deployed engineering",
+      "path": "contents/handbook/forward-deployed-engineering/working-with-ai.md",
+      "url": "/handbook/forward-deployed-engineering/working-with-ai"
+    },
+    {
+      "id": "forward-deployed-engineering/working-with-customers",
+      "title": "Working with customers",
+      "cat": "Forward deployed engineering",
+      "path": "contents/handbook/forward-deployed-engineering/working-with-customers.md",
+      "url": "/handbook/forward-deployed-engineering/working-with-customers"
+    },
+    {
+      "id": "forward-deployed-engineering/working-with-sales-and-cs",
+      "title": "Working with sales and CS",
+      "cat": "Forward deployed engineering",
+      "path": "contents/handbook/forward-deployed-engineering/working-with-sales-and-cs.md",
+      "url": "/handbook/forward-deployed-engineering/working-with-sales-and-cs"
+    },
+    {
+      "id": "forward-deployed-engineering/working-with-product-engineering",
+      "title": "Working with product engineering",
+      "cat": "Forward deployed engineering",
+      "path": "contents/handbook/forward-deployed-engineering/working-with-product-engineering.md",
+      "url": "/handbook/forward-deployed-engineering/working-with-product-engineering"
+    },
+    {
+      "id": "forward-deployed-engineering/working-with-support",
+      "title": "Working with support",
+      "cat": "Forward deployed engineering",
+      "path": "contents/handbook/forward-deployed-engineering/working-with-support.md",
+      "url": "/handbook/forward-deployed-engineering/working-with-support"
+    },
+    {
+      "id": "forward-deployed-engineering/new-hire-onboarding",
+      "title": "New starter onboarding",
+      "cat": "Forward deployed engineering",
+      "path": "contents/handbook/forward-deployed-engineering/new-hire-onboarding.md",
+      "url": "/handbook/forward-deployed-engineering/new-hire-onboarding"
+    },
+    {
+      "id": "cs-and-onboarding/shareable-guides/designing-events-for-per-entity-metrics",
+      "title": "Designing events for per-entity metrics",
+      "cat": "Shareable guides",
+      "path": "contents/handbook/cs-and-onboarding/shareable-guides/designing-events-for-per-entity-metrics.md",
+      "url": "/handbook/cs-and-onboarding/shareable-guides/designing-events-for-per-entity-metrics"
+    },
+    {
+      "id": "cs-and-onboarding/shareable-guides/llm-cost-optimization",
+      "title": "LLM cost optimization",
+      "cat": "Shareable guides",
+      "path": "contents/handbook/cs-and-onboarding/shareable-guides/llm-cost-optimization.md",
+      "url": "/handbook/cs-and-onboarding/shareable-guides/llm-cost-optimization"
+    },
+    {
+      "id": "onboarding/onboarding-team",
+      "title": "Onboarding team",
+      "cat": "Onboarding",
+      "path": "contents/handbook/onboarding/onboarding-team.md",
+      "url": "/handbook/onboarding/onboarding-team"
+    },
+    {
+      "id": "onboarding/onboarding-program",
+      "title": "Onboarding program",
+      "cat": "Onboarding",
+      "path": "contents/handbook/onboarding/onboarding-program.md",
+      "url": "/handbook/onboarding/onboarding-program"
+    },
+    {
+      "id": "onboarding/onboarding-tracking",
+      "title": "Onboarding process",
+      "cat": "Onboarding",
+      "path": "contents/handbook/onboarding/onboarding-tracking.md",
+      "url": "/handbook/onboarding/onboarding-tracking"
+    },
+    {
+      "id": "onboarding/onboarding-data",
+      "title": "Onboarding data",
+      "cat": "Onboarding",
+      "path": "contents/handbook/onboarding/onboarding-data.md",
+      "url": "/handbook/onboarding/onboarding-data"
+    },
+    {
+      "id": "onboarding/onboarding-conversations-playbook",
+      "title": "Onboarding conversations playbook",
+      "cat": "Onboarding",
+      "path": "contents/handbook/onboarding/onboarding-conversations-playbook.md",
+      "url": "/handbook/onboarding/onboarding-conversations-playbook"
+    },
+    {
+      "id": "onboarding/sales-handover",
+      "title": "Sales handover",
+      "cat": "Onboarding",
+      "path": "contents/handbook/onboarding/sales-handover.md",
+      "url": "/handbook/onboarding/sales-handover"
+    },
+    {
+      "id": "onboarding/new-hire-onboarding",
+      "title": "New hire onboarding",
+      "cat": "Onboarding",
+      "path": "contents/handbook/onboarding/new-hire-onboarding.md",
+      "url": "/handbook/onboarding/new-hire-onboarding"
+    },
+    {
+      "id": "growth/use-case-selling/use-case-selling",
+      "title": "Use-case selling",
+      "cat": "Use-case selling",
+      "path": "contents/handbook/growth/use-case-selling/use-case-selling.md",
+      "url": "/handbook/growth/use-case-selling/use-case-selling"
+    },
+    {
+      "id": "growth/use-case-selling/product-intelligence",
+      "title": "Product Intelligence",
+      "cat": "Use-case selling",
+      "path": "contents/handbook/growth/use-case-selling/product-intelligence.md",
+      "url": "/handbook/growth/use-case-selling/product-intelligence"
+    },
+    {
+      "id": "growth/use-case-selling/release-engineering",
+      "title": "Release Engineering",
+      "cat": "Use-case selling",
+      "path": "contents/handbook/growth/use-case-selling/release-engineering.md",
+      "url": "/handbook/growth/use-case-selling/release-engineering"
+    },
+    {
+      "id": "growth/use-case-selling/observability",
+      "title": "Observability",
+      "cat": "Use-case selling",
+      "path": "contents/handbook/growth/use-case-selling/observability.md",
+      "url": "/handbook/growth/use-case-selling/observability"
+    },
+    {
+      "id": "growth/use-case-selling/growth-and-marketing",
+      "title": "Growth & Marketing",
+      "cat": "Use-case selling",
+      "path": "contents/handbook/growth/use-case-selling/growth-and-marketing.md",
+      "url": "/handbook/growth/use-case-selling/growth-and-marketing"
+    },
+    {
+      "id": "growth/use-case-selling/ai-llm-observability",
+      "title": "AI/LLM Observability",
+      "cat": "Use-case selling",
+      "path": "contents/handbook/growth/use-case-selling/ai-llm-observability.md",
+      "url": "/handbook/growth/use-case-selling/ai-llm-observability"
+    },
+    {
+      "id": "growth/use-case-selling/data-infrastructure",
+      "title": "Data Infrastructure",
+      "cat": "Use-case selling",
+      "path": "contents/handbook/growth/use-case-selling/data-infrastructure.md",
+      "url": "/handbook/growth/use-case-selling/data-infrastructure"
+    },
+    {
+      "id": "growth/use-case-selling/customer-experience",
+      "title": "Customer Experience",
+      "cat": "Use-case selling",
+      "path": "contents/handbook/growth/use-case-selling/customer-experience.md",
+      "url": "/handbook/growth/use-case-selling/customer-experience"
+    },
+    {
+      "id": "growth/cross-selling/how-we-upsell-and-cross-sell",
+      "title": "How we upsell and cross-sell",
+      "cat": "Cross-selling",
+      "path": "contents/handbook/growth/cross-selling/how-we-upsell-and-cross-sell.md",
+      "url": "/handbook/growth/cross-selling/how-we-upsell-and-cross-sell"
+    },
+    {
+      "id": "growth/cross-selling/tracking-cross-sells",
+      "title": "Tracking cross sells",
+      "cat": "Cross-selling",
+      "path": "contents/handbook/growth/cross-selling/tracking-cross-sells.md",
+      "url": "/handbook/growth/cross-selling/tracking-cross-sells"
+    },
+    {
+      "id": "growth/cross-selling/cross-sell-motions",
+      "title": "Cross sell motions",
+      "cat": "Cross-selling",
+      "path": "contents/handbook/growth/cross-selling/cross-sell-motions.md",
+      "url": "/handbook/growth/cross-selling/cross-sell-motions"
+    },
+    {
+      "id": "growth/cross-selling/error-tracking-cross-sell",
+      "title": "Error Tracking cross-sell",
+      "cat": "Cross-selling",
+      "path": "contents/handbook/growth/cross-selling/error-tracking-cross-sell.md",
+      "url": "/handbook/growth/cross-selling/error-tracking-cross-sell"
+    },
+    {
+      "id": "growth/sales/customer-journey",
+      "title": "Customer journey and coverage model",
+      "cat": "Account management",
+      "path": "contents/handbook/growth/sales/customer-journey.md",
+      "url": "/handbook/growth/sales/customer-journey"
+    },
+    {
+      "id": "growth/sales/account-allocation",
+      "title": "Allocating accounts",
+      "cat": "Account management",
+      "path": "contents/handbook/growth/sales/account-allocation.md",
+      "url": "/handbook/growth/sales/account-allocation"
+    },
+    {
+      "id": "growth/sales/account-planning",
+      "title": "Account planning",
+      "cat": "Account management",
+      "path": "contents/handbook/growth/sales/account-planning.md",
+      "url": "/handbook/growth/sales/account-planning"
+    },
+    {
+      "id": "growth/sales/customer-onboarding",
+      "title": "New customer onboarding",
+      "cat": "Account management",
+      "path": "contents/handbook/growth/sales/customer-onboarding.md",
+      "url": "/handbook/growth/sales/customer-onboarding"
+    },
+    {
+      "id": "cs-and-onboarding/onboarding-success-plan",
+      "title": "Template for onboarding success plan",
+      "cat": "Account management",
+      "path": "contents/handbook/cs-and-onboarding/onboarding-success-plan.md",
+      "url": "/handbook/cs-and-onboarding/onboarding-success-plan"
+    },
+    {
+      "id": "cs-and-onboarding/foundation-check",
+      "title": "Basic implementation review",
+      "cat": "Account management",
+      "path": "contents/handbook/cs-and-onboarding/foundation-check.md",
+      "url": "/handbook/cs-and-onboarding/foundation-check"
+    },
+    {
+      "id": "cs-and-onboarding/handling-customer-issues",
+      "title": "Handling customer issues",
+      "cat": "Account management",
+      "path": "contents/handbook/cs-and-onboarding/handling-customer-issues.md",
+      "url": "/handbook/cs-and-onboarding/handling-customer-issues"
+    },
+    {
+      "id": "account-management/getting-people-to-talk-to-you",
+      "title": "Getting people to talk to you",
+      "cat": "Account management",
+      "path": "contents/handbook/account-management/getting-people-to-talk-to-you.md",
+      "url": "/handbook/account-management/getting-people-to-talk-to-you"
+    },
+    {
+      "id": "cs-and-onboarding/health-tracking",
+      "title": "Health tracking",
+      "cat": "Account management",
+      "path": "contents/handbook/cs-and-onboarding/health-tracking.md",
+      "url": "/handbook/cs-and-onboarding/health-tracking"
+    },
+    {
+      "id": "cs-and-onboarding/health-checks",
+      "title": "Customer health checks",
+      "cat": "Account management",
+      "path": "contents/handbook/cs-and-onboarding/health-checks.md",
+      "url": "/handbook/cs-and-onboarding/health-checks"
+    },
+    {
+      "id": "growth/sales/risk-mitigation-and-churn-prevention",
+      "title": "Risk mitigation and churn prevention",
+      "cat": "Account management",
+      "path": "contents/handbook/growth/sales/risk-mitigation-and-churn-prevention.md",
+      "url": "/handbook/growth/sales/risk-mitigation-and-churn-prevention"
+    },
+    {
+      "id": "cs-and-onboarding/customer-churn-retros",
+      "title": "Learn from churn",
+      "cat": "Account management",
+      "path": "contents/handbook/cs-and-onboarding/customer-churn-retros.md",
+      "url": "/handbook/cs-and-onboarding/customer-churn-retros"
+    },
+    {
+      "id": "cs-and-onboarding/churn-reasons",
+      "title": "Common churn reasons",
+      "cat": "Account management",
+      "path": "contents/handbook/cs-and-onboarding/churn-reasons.md",
+      "url": "/handbook/cs-and-onboarding/churn-reasons"
+    },
+    {
+      "id": "cs-and-onboarding/feature-requests",
+      "title": "Tracking feature requests",
+      "cat": "Account management",
+      "path": "contents/handbook/cs-and-onboarding/feature-requests.md",
+      "url": "/handbook/cs-and-onboarding/feature-requests"
+    },
+    {
+      "id": "growth/sales/grow-an-account",
+      "title": "Playbook for growing an account",
+      "cat": "Account management",
+      "path": "contents/handbook/growth/sales/grow-an-account.md",
+      "url": "/handbook/growth/sales/grow-an-account"
+    },
+    {
+      "id": "growth/sales/contract-rules",
+      "title": "Contract rules",
+      "cat": "Contracts & billing",
+      "path": "contents/handbook/growth/sales/contract-rules.md",
+      "url": "/handbook/growth/sales/contract-rules"
+    },
+    {
+      "id": "growth/sales/contracts",
+      "title": "Creating contracts",
+      "cat": "Contracts & billing",
+      "path": "contents/handbook/growth/sales/contracts.md",
+      "url": "/handbook/growth/sales/contracts"
+    },
+    {
+      "id": "growth/sales/billing",
+      "title": "Billing",
+      "cat": "Contracts & billing",
+      "path": "contents/handbook/growth/sales/billing.md",
+      "url": "/handbook/growth/sales/billing"
+    },
+    {
+      "id": "cs-and-onboarding/renewals",
+      "title": "Renewals",
+      "cat": "Contracts & billing",
+      "path": "contents/handbook/cs-and-onboarding/renewals.md",
+      "url": "/handbook/cs-and-onboarding/renewals"
+    },
+    {
+      "id": "growth/sales/trials",
+      "title": "Trials",
+      "cat": "Contracts & billing",
+      "path": "contents/handbook/growth/sales/trials.md",
+      "url": "/handbook/growth/sales/trials"
+    },
+    {
+      "id": "growth/sales/refunds",
+      "title": "Refunds",
+      "cat": "Contracts & billing",
+      "path": "contents/handbook/growth/sales/refunds.md",
+      "url": "/handbook/growth/sales/refunds"
+    },
+    {
+      "id": "growth/sales/sales-and-cs-tools",
+      "title": "Tools",
+      "cat": "Tools & systems",
+      "path": "contents/handbook/growth/sales/sales-and-cs-tools.md",
+      "url": "/handbook/growth/sales/sales-and-cs-tools"
+    },
+    {
+      "id": "growth/sales/crm",
+      "title": "Managing our CRM",
+      "cat": "Tools & systems",
+      "path": "contents/handbook/growth/sales/crm.md",
+      "url": "/handbook/growth/sales/crm"
+    },
+    {
+      "id": "growth/sales/lead-scoring",
+      "title": "Lead routing & scoring",
+      "cat": "Tools & systems",
+      "path": "contents/handbook/growth/sales/lead-scoring.md",
+      "url": "/handbook/growth/sales/lead-scoring"
+    },
+    {
+      "id": "growth/sales/slack-channels",
+      "title": "Shared Slack channels",
+      "cat": "Tools & systems",
+      "path": "contents/handbook/growth/sales/slack-channels.md",
+      "url": "/handbook/growth/sales/slack-channels"
+    },
+    {
+      "id": "growth/sales/automations",
+      "title": "Automations",
+      "cat": "Tools & systems",
+      "path": "contents/handbook/growth/sales/automations.md",
+      "url": "/handbook/growth/sales/automations"
+    },
+    {
+      "id": "growth/sales/user-event-streams",
+      "title": "User event streams",
+      "cat": "Tools & systems",
+      "path": "contents/handbook/growth/sales/user-event-streams.md",
+      "url": "/handbook/growth/sales/user-event-streams"
+    },
+    {
+      "id": "growth/sales/historical-import",
+      "title": "Historical imports",
+      "cat": "Tools & systems",
+      "path": "contents/handbook/growth/sales/historical-import.md",
+      "url": "/handbook/growth/sales/historical-import"
+    },
+    {
+      "id": "onboarding/metabase-account-analysis",
+      "title": "Metabase account analysis",
+      "cat": "Tools & systems",
+      "path": "contents/handbook/onboarding/metabase-account-analysis.md",
+      "url": "/handbook/onboarding/metabase-account-analysis"
+    },
+    {
+      "id": "growth/sales/sandboxes",
+      "title": "Creating sandboxes",
+      "cat": "Tools & systems",
+      "path": "contents/handbook/growth/sales/sandboxes.md",
+      "url": "/handbook/growth/sales/sandboxes"
+    },
+    {
+      "id": "growth/sales/product-enablement",
+      "title": "Product enablement",
+      "cat": "Enablement & resources",
+      "path": "contents/handbook/growth/sales/product-enablement.md",
+      "url": "/handbook/growth/sales/product-enablement"
+    },
+    {
+      "id": "growth/sales/customer-training",
+      "title": "Running product training sessions",
+      "cat": "Enablement & resources",
+      "path": "contents/handbook/growth/sales/customer-training.md",
+      "url": "/handbook/growth/sales/customer-training"
+    },
+    {
+      "id": "growth/sales/customer-industry-segments",
+      "title": "Customer industry segments",
+      "cat": "Enablement & resources",
+      "path": "contents/handbook/growth/sales/customer-industry-segments.md",
+      "url": "/handbook/growth/sales/customer-industry-segments"
+    },
+    {
+      "id": "growth/sales/communications-templates",
+      "title": "Communications templates",
+      "cat": "Enablement & resources",
+      "path": "contents/handbook/growth/sales/communications-templates.md",
+      "url": "/handbook/growth/sales/communications-templates"
+    },
+    {
+      "id": "growth/sales/customer-faqs",
+      "title": "Customer FAQs",
+      "cat": "Enablement & resources",
+      "path": "contents/handbook/growth/sales/customer-faqs.md",
+      "url": "/handbook/growth/sales/customer-faqs"
+    },
+    {
+      "id": "growth/sales/turning-knowledge-into-agent-skills",
+      "title": "Turning knowledge into agent skills",
+      "cat": "Enablement & resources",
+      "path": "contents/handbook/growth/sales/turning-knowledge-into-agent-skills.md",
+      "url": "/handbook/growth/sales/turning-knowledge-into-agent-skills"
+    },
+    {
+      "id": "cs-and-onboarding/new-hire-onboarding-exercise",
+      "title": "New hire onboarding exercise",
+      "cat": "Enablement & resources",
+      "path": "contents/handbook/cs-and-onboarding/new-hire-onboarding-exercise.md",
+      "url": "/handbook/cs-and-onboarding/new-hire-onboarding-exercise"
+    },
+    {
+      "id": "onboarding/chrome-extension-billing-case-study-wildfire",
+      "title": "Chrome extension billing case study",
+      "cat": "Enablement & resources",
+      "path": "contents/handbook/onboarding/chrome-extension-billing-case-study-wildfire.md",
+      "url": "/handbook/onboarding/chrome-extension-billing-case-study-wildfire"
+    },
+    {
+      "id": "growth/sales/data-foundations",
+      "title": "Data foundations",
+      "cat": "Enablement & resources",
+      "path": "contents/handbook/growth/sales/data-foundations.md",
+      "url": "/handbook/growth/sales/data-foundations"
+    },
+    {
+      "id": "growth/sales/customer-onsites",
+      "title": "Customer on-sites",
+      "cat": "Working with customers in person",
+      "path": "contents/handbook/growth/sales/customer-onsites.md",
+      "url": "/handbook/growth/sales/customer-onsites"
+    },
+    {
+      "id": "cs-and-onboarding/cohort-dinners",
+      "title": "Cohort dinners",
+      "cat": "Working with customers in person",
+      "path": "contents/handbook/cs-and-onboarding/cohort-dinners.md",
+      "url": "/handbook/cs-and-onboarding/cohort-dinners"
+    }
+  ]
+}

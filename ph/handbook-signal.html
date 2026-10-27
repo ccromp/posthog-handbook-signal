@@ -1,0 +1,1266 @@
+<title>Handbook Signal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2026%2026%22%3E%3Crect%20x=%221%22%20y=%221%22%20width=%2224%22%20height=%2224%22%20rx=%225%22%20fill=%22%23141413%22/%3E%3Crect%20x=%226%22%20y=%2214%22%20width=%223%22%20height=%226%22%20rx=%221%22%20fill=%22%23F7F5F0%22/%3E%3Crect%20x=%2211.5%22%20y=%2210%22%20width=%223%22%20height=%2210%22%20rx=%221%22%20fill=%22%23F7F5F0%22/%3E%3Crect%20x=%2217%22%20y=%226%22%20width=%223%22%20height=%2214%22%20rx=%221%22%20fill=%22%23FF4F00%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+<script src="vendor/posthog.js"></script>
+<style>
+/* Layout: one compact bar (doc switcher + rep switcher), then the page itself.
+   Reading view = article column + sticky insight rail (rail drops below the article under 1000px,
+   with a one-line stat strip kept above the fold). Team view = usage tables over the same data. */
+:root {
+  --paper: #F2F4F7;
+  --surface: #FFFFFF;
+  --ink: #12161C;
+  --steel: #5A6575;
+  --grid: #D8DDE5;
+  --signal: #2847E8;
+  --signal-ink: #FFFFFF;
+  --signal-soft: #E5E9FD;
+  --good: #11815A;
+  --good-soft: #DCF2E7;
+  --warn: #A35E00;
+  --warn-soft: #FBEBD0;
+  --scrim: rgba(18, 22, 28, 0.28);
+  --shadow: 0 10px 30px rgba(18, 22, 28, 0.14), 0 1px 3px rgba(18, 22, 28, 0.08);
+  --c1: #0E7C86; --c2: #7B45C9; --c3: #B8460F; --c4: #2F7A3E; --c5: #B4236B;
+  --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --bar-h: 56px;
+  --top: env(safe-area-inset-top, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #0E1116; --surface: #161A21; --ink: #E7EAF0; --steel: #98A3B3; --grid: #2A313C;
+    --signal: #8199FF; --signal-ink: #0E1116; --signal-soft: #1D2650;
+    --good: #45C98F; --good-soft: #10291F; --warn: #E8A64A; --warn-soft: #2E2313;
+    --scrim: rgba(0, 0, 0, 0.5); --shadow: 0 12px 34px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0E1116; --surface: #161A21; --ink: #E7EAF0; --steel: #98A3B3; --grid: #2A313C;
+  --signal: #8199FF; --signal-ink: #0E1116; --signal-soft: #1D2650;
+  --good: #45C98F; --good-soft: #10291F; --warn: #E8A64A; --warn-soft: #2E2313;
+  --scrim: rgba(0, 0, 0, 0.5); --shadow: 0 12px 34px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-padding-top: calc(var(--bar-h) + 56px); }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--f-body); font-size: 15px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: var(--top); z-index: 40; background: var(--surface); }
+button { font: inherit; color: inherit; }
+a { color: var(--signal); }
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; border-radius: 4px; }
+.mono { font-family: var(--f-mono); }
+.num { font-variant-numeric: tabular-nums; }
+.wrap {
+  max-width: 1280px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* ---------- top bar ---------- */
+.bar { position: relative; z-index: 30; background: var(--surface); border-bottom: 1px solid var(--grid); }
+.bar .wrap { height: var(--bar-h); display: flex; align-items: center; gap: 10px; }
+.mark { display: flex; align-items: center; gap: 8px; font-family: var(--f-display); font-weight: 800; letter-spacing: -0.01em; white-space: nowrap; flex: none; }
+.mark svg { flex: none; }
+.mark span { font-size: 15px; }
+/* Provenance: said once for the app (PoC tag in the bar, details on demand) and once per page (source line under the title). */
+.poc {
+  flex: none; height: 24px; padding: 0 7px; border-radius: 4px; cursor: pointer;
+  font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: .04em;
+  color: var(--signal); background: transparent; border: 1px dashed color-mix(in srgb, var(--signal) 60%, var(--grid));
+}
+.poc:hover, .poc[aria-expanded="true"] { background: var(--signal-soft); border-style: solid; }
+.src { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; font-size: 12.5px; color: var(--steel); min-width: 0; }
+.src-state { display: inline-flex; align-items: center; gap: 7px; border: 0; background: none; padding: 2px 0; cursor: pointer; color: inherit; text-align: left; min-width: 0; }
+.src-state b { color: var(--ink); font-weight: 600; }
+.src-state:hover b { color: var(--signal); }
+.src .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; background: var(--good); box-shadow: 0 0 0 3px var(--good-soft); }
+.src[data-mode="snap"] .dot { background: transparent; border: 1.5px solid var(--steel); box-shadow: none; }
+.src[data-mode="load"] .dot { background: var(--signal); box-shadow: 0 0 0 3px var(--signal-soft); animation: pulse 1s ease-in-out infinite alternate; }
+@keyframes pulse { from { opacity: .35; } to { opacity: 1; } }
+.src-links { display: inline-flex; align-items: center; gap: 12px; }
+.src-links a { display: inline-flex; align-items: center; gap: 5px; color: var(--steel); text-decoration: none; border-bottom: 1px dotted currentColor; line-height: 1.3; }
+.src-links a:hover { color: var(--signal); }
+.about { padding: 16px 16px 14px; overflow-y: auto; }
+.about .tag { font-family: var(--f-mono); font-size: 11px; letter-spacing: .06em; color: var(--signal); }
+.about h2 { font-family: var(--f-display); font-size: 17px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em; margin: 4px 0 6px; text-wrap: balance; }
+.about > p { margin: 0; font-size: 13px; color: var(--steel); }
+.flow { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 0; counter-reset: step; }
+.flow li { counter-increment: step; position: relative; display: grid; grid-template-columns: 20px minmax(0, 1fr); column-gap: 10px; padding-bottom: 12px; }
+.flow li:last-child { padding-bottom: 0; }
+.flow li::before { content: counter(step); grid-row: span 2; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-family: var(--f-mono); font-size: 10.5px; color: var(--ink); border: 1px solid var(--grid); background: var(--paper); position: relative; z-index: 1; }
+.flow li:not(:last-child)::after { content: ""; position: absolute; left: 9.5px; top: 20px; bottom: 0; width: 1px; background: var(--grid); }
+.flow b { font-size: 13px; font-weight: 700; }
+.flow b.m { font-family: var(--f-mono); font-weight: 500; font-size: 12.5px; }
+.flow span { font-size: 12.5px; color: var(--steel); line-height: 1.4; }
+.facts { margin: 14px 0 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 5px 14px; font-size: 12.5px; padding-top: 12px; border-top: 1px solid var(--grid); }
+.facts dt { color: var(--steel); }
+.facts dd { margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.ab-links { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; font-weight: 600; }
+.ab-links a { text-decoration: none; }
+
+.stats-loading { display: flex; align-items: center; gap: 10px; }
+.stats-loading i { width: 7px; height: 7px; border-radius: 50%; flex: none; background: var(--signal); animation: pulse 1.6s ease-in-out infinite; }
+.md-loading {
+  margin-top: 22px; padding: 18px 16px; border: 1px dashed var(--grid); border-radius: 8px;
+  background: var(--surface); font-family: var(--f-mono); font-size: 12.5px; color: var(--steel);
+}
+.docbtn {
+  flex: 1 1 auto; min-width: 0; max-width: 460px;
+  display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 10px 0 12px;
+  border: 1px solid var(--grid); border-radius: 6px; background: var(--paper); cursor: pointer; text-align: left;
+}
+.docbtn:hover { border-color: var(--steel); }
+.docbtn.empty .t { font-weight: 400; color: var(--steel); }
+.docbtn .t { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.docbtn .f { font-family: var(--f-mono); font-size: 11px; color: var(--steel); white-space: nowrap; }
+.docbtn kbd { margin-left: auto; font-family: var(--f-mono); font-size: 11px; color: var(--steel); border: 1px solid var(--grid); border-radius: 4px; padding: 0 5px; background: var(--surface); }
+.docbtn .car { margin-left: auto; color: var(--steel); flex: none; }
+.docbtn kbd + .car { margin-left: 4px; }
+.seg { display: flex; border: 1px solid var(--grid); border-radius: 6px; padding: 2px; background: var(--paper); flex: none; }
+.seg button { border: 0; background: transparent; height: 32px; padding: 0 12px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 13px; color: var(--steel); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.spacer { flex: 1 1 0; }
+.repbtn { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 8px 0 4px; border: 1px solid var(--grid); border-radius: 19px; background: var(--surface); cursor: pointer; flex: none; }
+.repbtn:hover { border-color: var(--steel); }
+.repbtn .n { font-weight: 600; font-size: 13px; white-space: nowrap; }
+.av { width: 28px; height: 28px; border-radius: 50%; display: inline-grid; place-items: center; color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .02em; flex: none; }
+.av.sm { width: 22px; height: 22px; font-size: 9px; }
+
+@media (max-width: 760px) {
+  .mark span, .docbtn .f, .docbtn kbd, .repbtn .n, .repbtn .car, .spacer { display: none; }
+  .bar .wrap { gap: 6px; }
+  .docbtn { padding: 0 8px 0 10px; }
+  .repbtn { padding: 0 4px; }
+  .seg button { padding: 0 9px; }
+}
+
+/* ---------- popovers ---------- */
+.scrim { position: fixed; inset: 0; z-index: 50; background: var(--scrim); }
+.pop {
+  position: fixed; z-index: 51; top: calc(var(--top) + var(--bar-h) + 6px);
+  width: min(440px, calc(100% - 32px)); max-height: min(72vh, 600px);
+  display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--grid); border-radius: 8px; box-shadow: var(--shadow); overflow: hidden;
+}
+.pop .search { padding: 10px; border-bottom: 1px solid var(--grid); }
+.pop input { width: 100%; height: 36px; border: 1px solid var(--grid); border-radius: 6px; padding: 0 10px; background: var(--paper); color: var(--ink); font: inherit; }
+.pop .list { overflow-y: auto; padding: 6px 0 8px; }
+.grp { padding: 10px 14px 4px; font-family: var(--f-mono); font-size: 11px; color: var(--steel); }
+.opt { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 14px; border: 0; background: transparent; cursor: pointer; text-align: left; }
+.opt:hover, .opt.kb { background: var(--paper); }
+.opt[aria-current="true"] .ot { color: var(--signal); }
+.ot { font-weight: 600; display: flex; align-items: center; gap: 8px; min-width: 0; }
+.ot .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.newdot { font-family: var(--f-mono); font-size: 10px; color: var(--signal); border: 1px solid currentColor; border-radius: 3px; padding: 0 4px; flex: none; }
+.os { display: flex; align-items: center; gap: 8px; font-family: var(--f-mono); font-size: 11px; color: var(--steel); }
+.mini { width: 44px; height: 6px; border-radius: 3px; background: var(--warn-soft); overflow: hidden; display: inline-block; }
+.mini i { display: block; height: 100%; background: var(--good); }
+.grp-h { width: 100%; display: flex; align-items: center; gap: 8px; padding: 9px 14px; border: 0; border-top: 1px solid var(--grid); background: transparent; cursor: pointer; text-align: left; }
+.grp-h:first-child { border-top: 0; }
+.grp-h:hover { background: var(--paper); }
+.grp-h .gn { font-weight: 700; font-size: 13px; flex: 1; min-width: 0; }
+.caret { flex: none; color: var(--steel); transition: transform .15s; }
+[aria-expanded="true"] .caret { transform: rotate(90deg); }
+.grp-h + .opt, .opt + .opt { padding-left: 32px; }
+.rep-opt { grid-template-columns: auto minmax(0, 1fr) auto; }
+.rep-opt, .grp-h + .rep-opt { padding-left: 14px; }
+.rep-opt .rr { font-size: 12px; color: var(--steel); }
+.pop .foot { border-top: 1px solid var(--grid); padding: 10px 14px; font-size: 12px; color: var(--steel); }
+
+/* ---------- reading view ---------- */
+.read-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 24px 96px; }
+@media (min-width: 1000px) { .read-grid { grid-template-columns: minmax(0, 740px) 340px; justify-content: center; gap: 56px; } }
+.doc { min-width: 0; }
+.crumb { font-family: var(--f-mono); font-size: 12px; color: var(--steel); overflow-wrap: anywhere; }
+.crumb a { color: inherit; text-decoration: none; border-bottom: 1px dotted currentColor; }
+.crumb .cat { font-family: var(--f-body); font-weight: 700; font-size: 12px; color: var(--signal); margin-right: 6px; }
+.doc h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; letter-spacing: -0.025em; margin: 10px 0 0; text-wrap: balance; }
+
+.strip { margin-top: 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; padding: 10px 12px; border: 1px solid var(--grid); border-radius: 6px; background: var(--surface); }
+.strip .s { display: flex; flex-direction: column; }
+.strip .s b { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.strip .s span { font-size: 11px; color: var(--steel); }
+.strip a { font-size: 13px; font-weight: 600; text-decoration: none; margin-left: auto; }
+@media (min-width: 1000px) { .strip { display: none; } }
+.dwellpill { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-mono); font-size: 12px; padding: 4px 8px; border-radius: 12px; background: var(--paper); color: var(--steel); white-space: nowrap; }
+.dwellpill.ok { background: var(--good-soft); color: var(--good); }
+.dwellpill i { width: 7px; height: 7px; border-radius: 50%; background: var(--signal); animation: pulse 1.6s ease-in-out infinite; }
+.dwellpill.ok i { background: var(--good); animation: none; }
+@keyframes pulse { 50% { opacity: .25; } }
+
+.chips { position: relative; z-index: 20; background: var(--paper); margin-top: 18px; padding-block: 8px; border-bottom: 1px solid var(--grid); display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chips a { flex: none; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--steel); padding: 5px 10px; border-radius: 14px; border: 1px solid transparent; }
+.chips a:hover { color: var(--ink); }
+.chips a.on { color: var(--ink); border-color: var(--grid); background: var(--surface); }
+
+.md { max-width: 70ch; font-size: 16px; line-height: 1.65; }
+.md > .intro { color: var(--steel); font-size: 14px; padding-top: 14px; }
+.md > .intro blockquote { margin: 0 0 8px; padding: 0; }
+.md > .intro p { margin: 0 0 6px; }
+.md section.sec { padding-top: 26px; scroll-margin-top: calc(var(--top) + var(--bar-h) + 56px); }
+.md h2 { font-family: var(--f-display); font-size: 23px; font-weight: 750; letter-spacing: -0.015em; margin: 0 0 12px; text-wrap: balance; }
+.md h3 { font-size: 17px; font-weight: 700; margin: 22px 0 8px; text-wrap: balance; }
+.md p { margin: 0 0 12px; }
+.md ul { margin: 0 0 14px; padding-left: 20px; }
+.md li { margin-bottom: 6px; }
+.md li::marker { color: var(--steel); }
+.md code { font-family: var(--f-mono); font-size: .86em; background: var(--surface); border: 1px solid var(--grid); border-radius: 3px; padding: 0 4px; }
+.md .lbl { display: block; font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; color: var(--steel); margin-bottom: 2px; }
+.md .lbl.win { color: var(--good); }
+.md p.concede { background: var(--warn-soft); border-radius: 5px; padding: 10px 12px; }
+.md p.concede .lbl { color: var(--warn); }
+.md .card { background: var(--surface); border: 1px solid var(--grid); border-radius: 8px; padding: 4px 18px 6px; margin: 14px 0; }
+.md .card > h3 { margin-top: 14px; }
+.md .card > h3::before { display: block; font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; color: var(--steel); margin-bottom: 4px; }
+.md [data-kind="battle"] .card > h3::before { content: "Battle card"; }
+.md [data-kind="objection"] .card > h3::before { content: "Objection"; }
+.md [data-kind="messaging"] .card > h3::before { content: "Message"; }
+.md [data-kind="objection"] .card > h3 { font-size: 18px; line-height: 1.35; }
+
+/* ---------- rail ---------- */
+.rail { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+@media (min-width: 1000px) { .rail { position: sticky; top: calc(var(--top) + var(--bar-h) + 20px); align-self: start; max-height: calc(100vh - var(--bar-h) - var(--top) - 32px); overflow-y: auto; padding-right: 2px; scrollbar-width: thin; } }
+@media (min-width: 640px) and (max-width: 999px) { .rail { display: grid; grid-template-columns: 1fr 1fr; align-items: start; } }
+.panel { background: var(--surface); border: 1px solid var(--grid); border-radius: 8px; padding: 14px 16px; }
+.eyebrow { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--steel); margin-bottom: 10px; }
+.sample { font-family: var(--f-mono); font-size: 10px; letter-spacing: .04em; text-transform: uppercase; border: 1px dashed var(--grid); border-radius: 3px; padding: 0 5px; color: var(--steel); }
+.visit { display: flex; gap: 12px; align-items: center; }
+.visit svg { flex: none; }
+.visit .vt { font-weight: 700; font-size: 15px; }
+.visit .vn { font-size: 12.5px; color: var(--steel); line-height: 1.4; }
+.ring-bg { stroke: var(--grid); }
+.ring-fg { stroke: var(--signal); transition: stroke-dashoffset .9s linear; }
+.visit.ok .ring-fg { stroke: var(--good); }
+.visit.ok .vt { color: var(--good); }
+
+.kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }
+.kpi b { display: block; font-size: 22px; font-weight: 750; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.kpi span { font-size: 12px; color: var(--steel); }
+.split { margin-top: 12px; }
+.split .bar2 { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--grid); }
+.split .bar2 i { display: block; height: 100%; }
+.split .bar2 .e { background: var(--good); }
+.split .bar2 .b { background: var(--warn); opacity: .75; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; font-size: 12px; color: var(--steel); }
+.legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; vertical-align: 0; }
+
+.readers { display: flex; flex-direction: column; gap: 2px; }
+.rd { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 6px 0; border-top: 1px solid var(--grid); }
+.rd:first-child { border-top: 0; }
+.rd .who { font-weight: 600; font-size: 14px; display: flex; gap: 6px; align-items: center; }
+.you { font-family: var(--f-mono); font-size: 10px; color: var(--signal); border: 1px solid currentColor; border-radius: 3px; padding: 0 4px; font-weight: 500; }
+.rd .what { font-size: 12px; color: var(--steel); }
+.rd .what .g { color: var(--good); font-weight: 600; }
+.rd .what .w { color: var(--warn); font-weight: 600; }
+.rd .when { font-family: var(--f-mono); font-size: 11px; color: var(--steel); }
+.rd.none .who { color: var(--steel); font-weight: 500; }
+.rd.none .av { opacity: .45; }
+
+.q { font-weight: 700; font-size: 15px; margin-bottom: 10px; }
+.choices { display: flex; gap: 6px; }
+.choices button { flex: 1; height: 36px; border: 1px solid var(--grid); border-radius: 6px; background: var(--paper); cursor: pointer; font-weight: 600; }
+.choices button:hover { border-color: var(--signal); color: var(--signal); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 6px; border: 1px solid var(--grid); background: var(--surface); font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none; color: var(--ink); }
+.btn:hover { border-color: var(--steel); }
+.btn.pri { background: var(--signal); color: var(--signal-ink); border-color: var(--signal); }
+.btn.pri:hover { filter: brightness(1.08); }
+.panel textarea { width: 100%; min-height: 72px; resize: vertical; border: 1px solid var(--grid); border-radius: 6px; padding: 8px 10px; background: var(--paper); color: var(--ink); font: inherit; font-size: 14px; margin: 8px 0; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.res { font-size: 13px; color: var(--steel); }
+.res .bar2 { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--grid); margin: 8px 0 6px; }
+.res .bar2 i { display: block; height: 100%; }
+.thanks { font-weight: 600; color: var(--good); margin-bottom: 4px; }
+
+.ghpath { font-family: var(--f-mono); font-size: 11.5px; color: var(--steel); overflow-wrap: anywhere; margin-bottom: 10px; }
+.cm { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; padding: 10px 0; border-top: 1px solid var(--grid); }
+.cm .h { font-size: 12px; color: var(--steel); }
+.cm .h b { color: var(--ink); font-family: var(--f-mono); font-weight: 500; }
+.cm p { margin: 2px 0 0; font-size: 14px; }
+div.empty { font-size: 13px; color: var(--steel); padding: 8px 0 12px; border-top: 1px solid var(--grid); }
+.fine { font-size: 12px; color: var(--steel); margin-top: 8px; }
+
+/* ---------- team view (styles) ---------- */
+.team { padding-block: 28px 140px; display: flex; flex-direction: column; gap: 24px; }
+.team h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(28px, 4.5vw, 40px); letter-spacing: -0.025em; line-height: 1.05; margin: 0; }
+.team .sub { color: var(--steel); margin-top: 6px; max-width: 80ch; }
+.team .sub code { font-family: var(--f-mono); font-size: 0.9em; }
+.tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; background: var(--grid); border: 1px solid var(--grid); border-radius: 8px; overflow: hidden; }
+.tile { background: var(--surface); padding: 14px 16px; }
+.tile b { display: block; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.tile small { font-size: 15px; font-weight: 600; color: var(--steel); }
+.tile span { font-size: 12.5px; color: var(--steel); }
+@media (max-width: 860px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tile:last-child { grid-column: span 2; } }
+.cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+@media (min-width: 1100px) { .cols { grid-template-columns: minmax(0, 1fr) 360px; } }
+.side { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.h2row { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.h2row h2 { font-family: var(--f-display); font-size: 19px; font-weight: 750; margin: 0; letter-spacing: -0.01em; }
+.scroll { overflow-x: auto; border: 1px solid var(--grid); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { text-align: left; font-family: var(--f-mono); font-weight: 500; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--steel); padding: 10px 12px; border-bottom: 1px solid var(--grid); white-space: nowrap; background: var(--surface); }
+td { padding: 9px 12px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; vertical-align: middle; background: var(--surface); }
+tr:last-child td { border-bottom: 0; }
+th.r, td.r { text-align: right; }
+.lb tbody tr { cursor: pointer; }
+.lb .tt { font-weight: 600; white-space: nowrap; }
+.lb .ff { font-family: var(--f-mono); font-size: 11px; color: var(--steel); white-space: nowrap; }
+.lb .bars { width: 140px; min-width: 100px; }
+.lb .bar2 { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--grid); }
+.lb .bar2 i { display: block; height: 100%; }
+.lb tr.cat .tt { display: flex; align-items: center; gap: 8px; }
+.lb tr.cat .ff { padding-left: 18px; }
+.lb tr.cat:hover td { background: var(--paper); }
+.lb tr.sub td { background: var(--paper); font-size: 13.5px; }
+.lb tr.sub td:first-child { padding-left: 30px; }
+.lb tr.sub .tt { font-weight: 500; white-space: normal; min-width: 180px; }
+.lb tr.sub:hover td { background: var(--signal-soft); }
+.lb td:first-child, .lb th:first-child, .hm td:first-child, .hm th:first-child { position: sticky; left: 0; z-index: 1; }
+.lb td.cov { white-space: nowrap; }
+.covbar { display: inline-block; width: 40px; height: 6px; border-radius: 3px; background: var(--grid); overflow: hidden; vertical-align: middle; margin-right: 6px; }
+.covbar i { display: block; height: 100%; background: var(--steel); }
+.pill { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 10px; padding: 1px 8px; white-space: nowrap; }
+.pill.g { background: var(--good-soft); color: var(--good); }
+.pill.w { background: var(--warn-soft); color: var(--warn); }
+.sorts { display: flex; gap: 4px; flex-wrap: wrap; }
+.sorts button { height: 28px; padding: 0 10px; border-radius: 14px; border: 1px solid var(--grid); background: var(--surface); font-size: 12.5px; font-weight: 600; color: var(--steel); cursor: pointer; }
+.sorts button[aria-pressed="true"] { color: var(--ink); border-color: var(--ink); }
+.watch { display: flex; flex-direction: column; gap: 12px; }
+.wi { background: var(--surface); border: 1px solid var(--grid); border-radius: 8px; padding: 14px 16px; }
+.wi .wh { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.wi .wh button { border: 0; background: none; padding: 0; font-weight: 700; font-size: 15px; cursor: pointer; text-align: left; color: var(--ink); }
+.wi .wh button:hover { color: var(--signal); }
+.wi .ws { font-size: 12.5px; color: var(--steel); margin: 2px 0 8px; }
+.wi blockquote { margin: 6px 0 0; padding: 6px 0 0; border-top: 1px dashed var(--grid); font-size: 13.5px; }
+.never { display: flex; flex-direction: column; gap: 12px; max-height: 420px; overflow-y: auto; }
+.nvc { font-family: var(--f-mono); font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--steel); margin-bottom: 5px; }
+.nvl { display: flex; flex-wrap: wrap; gap: 6px; }
+.nvl button { border: 1px dashed var(--grid); background: var(--paper); color: var(--ink); border-radius: 4px; padding: 3px 8px; font-size: 12.5px; cursor: pointer; text-align: left; }
+.nvl button:hover { border-color: var(--signal); color: var(--signal); }
+.hm td, .hm th { text-align: center; padding: 6px 8px; }
+.hm th { text-transform: none; letter-spacing: 0; font-size: 12px; }
+.hm th:first-child { text-align: left; }
+.hm th.me { color: var(--signal); }
+.hm td.rn { text-align: left; white-space: nowrap; font-weight: 600; }
+.cell { min-width: 84px; height: 40px; margin: 0 auto; border-radius: 4px; display: grid; place-content: center; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.cell small { display: block; font-size: 10px; font-weight: 500; opacity: .85; }
+.cell.none { border: 1px dashed var(--grid); color: var(--steel); font-weight: 400; }
+.cell.bounce { background: var(--warn-soft); color: var(--warn); }
+
+footer { border-top: 1px solid var(--grid); padding-block: 16px 76px; font-size: 12.5px; color: var(--steel); }
+
+/* ---------- event stream ---------- */
+.fab {
+  position: fixed; z-index: 35;
+  right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px 0 12px; border-radius: 20px;
+  background: var(--ink); color: var(--paper); border: 0; cursor: pointer; font-weight: 600; font-size: 13px; box-shadow: var(--shadow);
+}
+@media (max-width: 900px) {
+  .fab {
+    position: static;
+    margin: 12px max(16px, env(safe-area-inset-right, 0px)) 24px auto;
+    width: fit-content;
+  }
+  footer { padding-block: 16px 20px; }
+}
+.fab .ct { font-family: var(--f-mono); font-size: 11px; background: var(--signal); color: var(--signal-ink); border-radius: 9px; padding: 1px 6px; }
+.drawer {
+  position: fixed; z-index: 52; top: 0; right: 0; bottom: 0; width: min(440px, 100%);
+  background: var(--surface); border-left: 1px solid var(--grid); box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
+  padding-top: var(--top); padding-bottom: env(safe-area-inset-bottom, 0px); padding-right: env(safe-area-inset-right, 0px);
+}
+.drawer header { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--grid); }
+.drawer header > div { min-width: 0; flex: 1; }
+.drawer header h2 { font-size: 16px; margin: 0; font-weight: 750; }
+.drawer header p { margin: 2px 0 0; font-size: 12.5px; color: var(--steel); }
+.drawer header .btn { margin-left: auto; flex: none; }
+.evs { overflow-y: auto; padding: 8px 16px 24px; flex: 1; }
+.ev { padding: 10px 0; border-bottom: 1px solid var(--grid); }
+.ev .tm { font-family: var(--f-mono); font-size: 11px; color: var(--steel); margin-bottom: 4px; display: flex; gap: 8px; }
+.ev .tm b { font-weight: 500; color: var(--signal); }
+.ev pre { margin: 0; font-family: var(--f-mono); font-size: 12px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); }
+.ev pre .fn { color: var(--signal); }
+.ev pre .s { color: var(--good); }
+
+.toast {
+  position: fixed; z-index: 60; left: 50%; transform: translateX(-50%);
+  bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  max-width: calc(100% - 32px); padding: 9px 14px; border-radius: 6px;
+  background: var(--ink); color: var(--paper); font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow);
+  pointer-events: none;
+}
+.toast.good { background: var(--good); color: #fff; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+
+<div class="bar">
+  <div class="wrap">
+    <div class="mark" aria-label="Handbook Signal">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="24" height="24" rx="5" fill="var(--ink)"/><rect x="6" y="14" width="3" height="6" rx="1" fill="var(--paper)"/><rect x="11.5" y="10" width="3" height="10" rx="1" fill="var(--paper)"/><rect x="17" y="6" width="3" height="14" rx="1" fill="var(--signal)"/></svg>
+      <span>Handbook Signal</span>
+    </div>
+    <button class="poc" id="pocBtn" aria-haspopup="dialog" aria-expanded="false" title="About this proof of concept">PoC</button>
+    <button class="docbtn" id="docBtn" aria-haspopup="dialog" aria-label="Switch page">
+      <span class="t" id="docBtnTitle">Search 121 pages</span>
+      <span class="f" id="docBtnFolder"></span>
+      <kbd>/</kbd>
+      <svg class="car" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <div class="spacer"></div>
+    <div class="seg" role="group" aria-label="View">
+      <button id="vRead" aria-pressed="false">Read</button>
+      <button id="vTeam" aria-pressed="true">Team</button>
+    </div>
+    <button class="repbtn" id="repBtn" aria-haspopup="dialog" aria-label="Switch sales rep">
+      <span class="av" id="repAv"></span><span class="n" id="repName"></span>
+      <svg class="car" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="var(--steel)" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<div class="pop" id="docPop" role="dialog" aria-label="Pages" hidden>
+  <div class="search"><input id="docSearch" type="search" placeholder="Search 121 pages" autocomplete="off"></div>
+  <div class="list" id="docList"></div>
+</div>
+<div class="pop" id="aboutPop" role="dialog" aria-label="About this proof of concept" hidden style="width:min(380px, calc(100vw - 32px))">
+  <div class="about">
+    <div class="tag">PROOF OF CONCEPT</div>
+    <h2>Reading analytics on top of PostHog's public handbook</h2>
+    <p>Handbook Signal is an independent demo, not a PostHog product. It doesn't host, copy or edit the handbook.</p>
+    <ol class="flow">
+      <li><b class="m">PostHog/posthog.com</b><span>Every page's Markdown lives in this GitHub repo, on master.</span></li>
+      <li><b>Handbook Signal</b><span>Fetches a page from GitHub when you open it, then renders it. No Markdown is stored here.</span></li>
+      <li><b>PostHog Cloud</b><span>posthog-js records views, 30s+ engaged reads and survey answers, queried back with HogQL.</span></li>
+    </ol>
+    <dl class="facts">
+      <dt>Pages indexed</dt><dd id="abCount"></dd>
+      <dt>This page</dt><dd id="abState"></dd>
+      <dt>Usage numbers</dt><dd id="abCloud"></dd>
+    </dl>
+    <div class="ab-links">
+      <a href="https://posthog.com/handbook" target="_blank" rel="noopener">Handbook on posthog.com ↗</a>
+      <a href="https://github.com/PostHog/posthog.com/tree/master/contents/handbook" target="_blank" rel="noopener">Source on GitHub ↗</a>
+    </div>
+  </div>
+</div>
+<div class="pop" id="repPop" role="dialog" aria-label="Sales reps" hidden style="width:min(320px, calc(100% - 32px))">
+  <div class="grp">VIEW THE HUB AS</div>
+  <div class="list" id="repList" style="padding-top:0"></div>
+  <div class="foot">Switching sends <span class="mono">posthog.reset()</span> then <span class="mono">posthog.identify()</span> for the new rep.</div>
+</div>
+
+<main id="readView" hidden>
+  <div class="wrap read-grid">
+    <article class="doc">
+      <div class="crumb" id="crumb"></div>
+      <h1 id="docTitle"></h1>
+      <div class="src" id="src"></div>
+      <div class="strip" id="strip"></div>
+      <nav class="chips" id="chips" aria-label="Sections"></nav>
+      <div class="md" id="md"></div>
+    </article>
+    <aside class="rail" id="rail" aria-label="Usage for this page">
+      <div class="panel">
+        <div class="eyebrow">Your visit <span class="mono" id="visitWho"></span></div>
+        <div class="visit" id="visit">
+          <svg width="46" height="46" viewBox="0 0 46 46" aria-hidden="true"><circle class="ring-bg" cx="23" cy="23" r="19" fill="none" stroke-width="4"/><circle class="ring-fg" id="ringFg" cx="23" cy="23" r="19" fill="none" stroke-width="4" stroke-linecap="round" stroke-dasharray="119.4" stroke-dashoffset="119.4" transform="rotate(-90 23 23)"/></svg>
+          <div><div class="vt num" id="visitT">Reading 0:00</div><div class="vn" id="visitN">At 0:30 this counts as an engaged read. Leave sooner and it counts as a bounce.</div></div>
+        </div>
+      </div>
+      <div class="panel" id="statsPanel"></div>
+      <div class="panel" id="readersPanel"></div>
+      <div class="panel" id="surveyPanel"></div>
+      <div class="panel" id="ghPanel"></div>
+    </aside>
+  </div>
+</main>
+
+<main id="teamView">
+  <div class="wrap team" id="team"></div>
+</main>
+
+<footer><div class="wrap">Proof of concept, not an official PostHog product. Page content is fetched live from the public <a href="https://github.com/PostHog/posthog.com/tree/master/contents/handbook" target="_blank" rel="noopener">PostHog/posthog.com handbook</a>; usage and survey numbers come from PostHog Cloud. The sales reps are fictional personas.</div></footer>
+
+<button class="fab" id="fab" aria-label="Open PostHog event stream">
+  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M1 7h3l2-5 2 10 2-5h3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
+  Events <span class="ct num" id="evCt">0</span>
+</button>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" hidden aria-label="PostHog event stream">
+  <header>
+    <div><h2>PostHog event stream</h2><p>What this page sends with posthog-js, newest first.</p></div>
+    <button class="btn" id="drawerClose">Close</button>
+  </header>
+  <div class="evs" id="evs"></div>
+</aside>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+const DOCS = [{"id": "error-tracking", "title": "Error tracking", "cat": "Product positioning", "path": "contents/handbook/marketing/how-we-position-and-sell/error-tracking.md", "url": "/handbook/marketing/how-we-position-and-sell/error-tracking"}, {"id": "logs", "title": "Logs", "cat": "Product positioning", "path": "contents/handbook/marketing/how-we-position-and-sell/logs.md", "url": "/handbook/marketing/how-we-position-and-sell/logs"}, {"id": "workflows", "title": "Workflows", "cat": "Product positioning", "path": "contents/handbook/marketing/how-we-position-and-sell/workflows.md", "url": "/handbook/marketing/how-we-position-and-sell/workflows"}, {"id": "session-replay", "title": "Session replay", "cat": "Product positioning", "path": "contents/handbook/marketing/positioning/session-replay.md", "url": "/handbook/marketing/positioning/session-replay"}, {"id": "analytics", "title": "Analytics", "cat": "Product positioning", "path": "contents/handbook/marketing/positioning/analytics.md", "url": "/handbook/marketing/positioning/analytics"}, {"id": "feature-flags", "title": "Feature flags", "cat": "Product positioning", "path": "contents/handbook/marketing/positioning/feature-flags.md", "url": "/handbook/marketing/positioning/feature-flags"}, {"id": "experiments", "title": "Experiments", "cat": "Product positioning", "path": "contents/handbook/marketing/positioning/experiments.md", "url": "/handbook/marketing/positioning/experiments"}, {"id": "llm-analytics", "title": "AI Observability", "cat": "Product positioning", "path": "contents/handbook/marketing/positioning/llm-analytics.md", "url": "/handbook/marketing/positioning/llm-analytics"}, {"id": "posthog-ai", "title": "PostHog AI", "cat": "Product positioning", "path": "contents/handbook/marketing/positioning/posthog-ai.md", "url": "/handbook/marketing/positioning/posthog-ai"}, {"id": "data-warehouse", "title": "Context warehouse", "cat": "Product positioning", "path": "contents/handbook/marketing/positioning/data-warehouse.md", "url": "/handbook/marketing/positioning/data-warehouse"}, {"id": "data-pipelines", "title": "Data pipelines", "cat": "Product positioning", "path": "contents/handbook/marketing/positioning/data-pipelines.md", "url": "/handbook/marketing/positioning/data-pipelines"}, {"id": "replay-vision", "title": "Replay vision", "cat": "Product positioning", "path": "contents/handbook/marketing/positioning/replay-vision.md", "url": "/handbook/marketing/positioning/replay-vision"}, {"id": "desktop", "title": "PostHog Desktop", "cat": "Product positioning", "path": "contents/handbook/marketing/positioning/desktop.md", "url": "/handbook/marketing/positioning/desktop"}, {"id": "endpoints", "title": "Endpoints", "cat": "Product positioning", "path": "contents/handbook/marketing/positioning/endpoints.md", "url": "/handbook/marketing/positioning/endpoints"}, {"id": "growth/sales/accounts-overview", "title": "Accounts overview", "cat": "Overview", "path": "contents/handbook/growth/sales/accounts-overview.md", "url": "/handbook/growth/sales/accounts-overview"}, {"id": "growth/sales/overview", "title": "Overview", "cat": "Overview", "path": "contents/handbook/growth/sales/overview.md", "url": "/handbook/growth/sales/overview"}, {"id": "growth/sales/csm-tam-overlay-coverage", "title": "CSM and TAM dual coverage", "cat": "Overview", "path": "contents/handbook/growth/sales/csm-tam-overlay-coverage.md", "url": "/handbook/growth/sales/csm-tam-overlay-coverage"}, {"id": "growth/sales/team-leads", "title": "Team leads", "cat": "Overview", "path": "contents/handbook/growth/sales/team-leads.md", "url": "/handbook/growth/sales/team-leads"}, {"id": "growth/sales/who-we-do-business-with", "title": "Who we do business with", "cat": "Overview", "path": "contents/handbook/growth/sales/who-we-do-business-with.md", "url": "/handbook/growth/sales/who-we-do-business-with"}, {"id": "growth/sales/new-business-how-we-work", "title": "How we work", "cat": "New business", "path": "contents/handbook/growth/sales/new-business-how-we-work.md", "url": "/handbook/growth/sales/new-business-how-we-work"}, {"id": "growth/sales/why-buy-posthog", "title": "Why buy PostHog", "cat": "New business", "path": "contents/handbook/growth/sales/why-buy-posthog.md", "url": "/handbook/growth/sales/why-buy-posthog"}, {"id": "growth/sales/new-sales", "title": "New business sales", "cat": "New business", "path": "contents/handbook/growth/sales/new-sales.md", "url": "/handbook/growth/sales/new-sales"}, {"id": "growth/sales/outbound-sales", "title": "Outbound sales", "cat": "New business", "path": "contents/handbook/growth/sales/outbound-sales.md", "url": "/handbook/growth/sales/outbound-sales"}, {"id": "growth/sales/how-to-do-discovery", "title": "How to do discovery", "cat": "New business", "path": "contents/handbook/growth/sales/how-to-do-discovery.md", "url": "/handbook/growth/sales/how-to-do-discovery"}, {"id": "growth/sales/running-trials", "title": "Running trials", "cat": "New business", "path": "contents/handbook/growth/sales/running-trials.md", "url": "/handbook/growth/sales/running-trials"}, {"id": "growth/sales/selling-via-aws", "title": "Selling and procuring via AWS Marketplace", "cat": "New business", "path": "contents/handbook/growth/sales/selling-via-aws.md", "url": "/handbook/growth/sales/selling-via-aws"}, {"id": "growth/sales/utilization-by-business-type", "title": "Utilization by business type", "cat": "New business", "path": "contents/handbook/growth/sales/utilization-by-business-type.md", "url": "/handbook/growth/sales/utilization-by-business-type"}, {"id": "growth/sales/professional-services", "title": "Professional services", "cat": "New business", "path": "contents/handbook/growth/sales/professional-services.md", "url": "/handbook/growth/sales/professional-services"}, {"id": "growth/sales/new-hire-onboarding", "title": "New team member onboarding", "cat": "New business", "path": "contents/handbook/growth/sales/new-hire-onboarding.md", "url": "/handbook/growth/sales/new-hire-onboarding"}, {"id": "growth/sales/how-we-work", "title": "How we work", "cat": "Product-led sales", "path": "contents/handbook/growth/sales/how-we-work.md", "url": "/handbook/growth/sales/how-we-work"}, {"id": "growth/sales/product-led-sales", "title": "Product-led sales", "cat": "Product-led sales", "path": "contents/handbook/growth/sales/product-led-sales.md", "url": "/handbook/growth/sales/product-led-sales"}, {"id": "growth/sales/product-led-lead-qualification", "title": "PLG lead qualification", "cat": "Product-led sales", "path": "contents/handbook/growth/sales/product-led-lead-qualification.md", "url": "/handbook/growth/sales/product-led-lead-qualification"}, {"id": "growth/sales/how-to-pitch-self-driving", "title": "How to pitch self-driving", "cat": "Product-led sales", "path": "contents/handbook/growth/sales/how-to-pitch-self-driving.md", "url": "/handbook/growth/sales/how-to-pitch-self-driving"}, {"id": "growth/sales/reverse-demo-calls", "title": "Reverse demo calls", "cat": "Product-led sales", "path": "contents/handbook/growth/sales/reverse-demo-calls.md", "url": "/handbook/growth/sales/reverse-demo-calls"}, {"id": "growth/sales/expansion-and-retention", "title": "Expansion, cross-sell & retention", "cat": "Product-led sales", "path": "contents/handbook/growth/sales/expansion-and-retention.md", "url": "/handbook/growth/sales/expansion-and-retention"}, {"id": "growth/sales/expansion-strategies", "title": "Expansion strategies", "cat": "Product-led sales", "path": "contents/handbook/growth/sales/expansion-strategies.md", "url": "/handbook/growth/sales/expansion-strategies"}, {"id": "growth/sales/evaluating-growth-potential", "title": "Evaluating an account's growth potential", "cat": "Product-led sales", "path": "contents/handbook/growth/sales/evaluating-growth-potential.md", "url": "/handbook/growth/sales/evaluating-growth-potential"}, {"id": "growth/sales/tam-excellence", "title": "TAM Excellence", "cat": "Product-led sales", "path": "contents/handbook/growth/sales/tam-excellence.md", "url": "/handbook/growth/sales/tam-excellence"}, {"id": "growth/sales/getting-people-to-talk-to-you", "title": "Getting people to talk to you", "cat": "Product-led sales", "path": "contents/handbook/growth/sales/getting-people-to-talk-to-you.md", "url": "/handbook/growth/sales/getting-people-to-talk-to-you"}, {"id": "cs-and-onboarding/customer-success", "title": "Overview", "cat": "Customer Success", "path": "contents/handbook/cs-and-onboarding/customer-success.md", "url": "/handbook/cs-and-onboarding/customer-success"}, {"id": "cs-and-onboarding/how-we-work", "title": "How we work", "cat": "Customer Success", "path": "contents/handbook/cs-and-onboarding/how-we-work.md", "url": "/handbook/cs-and-onboarding/how-we-work"}, {"id": "cs-and-onboarding/new-hire-onboarding", "title": "New starters", "cat": "Customer Success", "path": "contents/handbook/cs-and-onboarding/new-hire-onboarding.md", "url": "/handbook/cs-and-onboarding/new-hire-onboarding"}, {"id": "cs-and-onboarding/new-hire-onboarding-team-leads", "title": "Team leads", "cat": "Customer Success", "path": "contents/handbook/cs-and-onboarding/new-hire-onboarding-team-leads.md", "url": "/handbook/cs-and-onboarding/new-hire-onboarding-team-leads"}, {"id": "cs-and-onboarding/getting-started-with-customers", "title": "Newly assigned customers", "cat": "Customer Success", "path": "contents/handbook/cs-and-onboarding/getting-started-with-customers.md", "url": "/handbook/cs-and-onboarding/getting-started-with-customers"}, {"id": "cs-and-onboarding/lifecycle-csm", "title": "Engagement lifecycle", "cat": "Customer Success", "path": "contents/handbook/cs-and-onboarding/lifecycle-csm.md", "url": "/handbook/cs-and-onboarding/lifecycle-csm"}, {"id": "cs-and-onboarding/engaging-unengaged-customers", "title": "Unengaged customers", "cat": "Customer Success", "path": "contents/handbook/cs-and-onboarding/engaging-unengaged-customers.md", "url": "/handbook/cs-and-onboarding/engaging-unengaged-customers"}, {"id": "cs-and-onboarding/cost-optimization", "title": "Cost optimization", "cat": "Customer Success", "path": "contents/handbook/cs-and-onboarding/cost-optimization.md", "url": "/handbook/cs-and-onboarding/cost-optimization"}, {"id": "cs-and-onboarding/how-we-use-automation", "title": "How we use automation", "cat": "Customer Success", "path": "contents/handbook/cs-and-onboarding/how-we-use-automation.md", "url": "/handbook/cs-and-onboarding/how-we-use-automation"}, {"id": "cs-and-onboarding/using-ai-to-analyze-customer-issues", "title": "Analyzing customer issues", "cat": "Customer Success", "path": "contents/handbook/cs-and-onboarding/using-ai-to-analyze-customer-issues.md", "url": "/handbook/cs-and-onboarding/using-ai-to-analyze-customer-issues"}, {"id": "forward-deployed-engineering/overview", "title": "Overview", "cat": "Forward deployed engineering", "path": "contents/handbook/forward-deployed-engineering/overview.md", "url": "/handbook/forward-deployed-engineering/overview"}, {"id": "forward-deployed-engineering/who-we-work-with", "title": "Who we work with", "cat": "Forward deployed engineering", "path": "contents/handbook/forward-deployed-engineering/who-we-work-with.md", "url": "/handbook/forward-deployed-engineering/who-we-work-with"}, {"id": "forward-deployed-engineering/how-we-work", "title": "How we work", "cat": "Forward deployed engineering", "path": "contents/handbook/forward-deployed-engineering/how-we-work.md", "url": "/handbook/forward-deployed-engineering/how-we-work"}, {"id": "forward-deployed-engineering/how-to-get-fde-involved", "title": "How to get an FDE involved", "cat": "Forward deployed engineering", "path": "contents/handbook/forward-deployed-engineering/how-to-get-fde-involved.md", "url": "/handbook/forward-deployed-engineering/how-to-get-fde-involved"}, {"id": "forward-deployed-engineering/working-with-ai", "title": "How we work with AI", "cat": "Forward deployed engineering", "path": "contents/handbook/forward-deployed-engineering/working-with-ai.md", "url": "/handbook/forward-deployed-engineering/working-with-ai"}, {"id": "forward-deployed-engineering/working-with-customers", "title": "Working with customers", "cat": "Forward deployed engineering", "path": "contents/handbook/forward-deployed-engineering/working-with-customers.md", "url": "/handbook/forward-deployed-engineering/working-with-customers"}, {"id": "forward-deployed-engineering/working-with-sales-and-cs", "title": "Working with sales and CS", "cat": "Forward deployed engineering", "path": "contents/handbook/forward-deployed-engineering/working-with-sales-and-cs.md", "url": "/handbook/forward-deployed-engineering/working-with-sales-and-cs"}, {"id": "forward-deployed-engineering/working-with-product-engineering", "title": "Working with product engineering", "cat": "Forward deployed engineering", "path": "contents/handbook/forward-deployed-engineering/working-with-product-engineering.md", "url": "/handbook/forward-deployed-engineering/working-with-product-engineering"}, {"id": "forward-deployed-engineering/working-with-support", "title": "Working with support", "cat": "Forward deployed engineering", "path": "contents/handbook/forward-deployed-engineering/working-with-support.md", "url": "/handbook/forward-deployed-engineering/working-with-support"}, {"id": "forward-deployed-engineering/new-hire-onboarding", "title": "New starter onboarding", "cat": "Forward deployed engineering", "path": "contents/handbook/forward-deployed-engineering/new-hire-onboarding.md", "url": "/handbook/forward-deployed-engineering/new-hire-onboarding"}, {"id": "cs-and-onboarding/shareable-guides/designing-events-for-per-entity-metrics", "title": "Designing events for per-entity metrics", "cat": "Shareable guides", "path": "contents/handbook/cs-and-onboarding/shareable-guides/designing-events-for-per-entity-metrics.md", "url": "/handbook/cs-and-onboarding/shareable-guides/designing-events-for-per-entity-metrics"}, {"id": "cs-and-onboarding/shareable-guides/llm-cost-optimization", "title": "LLM cost optimization", "cat": "Shareable guides", "path": "contents/handbook/cs-and-onboarding/shareable-guides/llm-cost-optimization.md", "url": "/handbook/cs-and-onboarding/shareable-guides/llm-cost-optimization"}, {"id": "onboarding/onboarding-team", "title": "Onboarding team", "cat": "Onboarding", "path": "contents/handbook/onboarding/onboarding-team.md", "url": "/handbook/onboarding/onboarding-team"}, {"id": "onboarding/onboarding-program", "title": "Onboarding program", "cat": "Onboarding", "path": "contents/handbook/onboarding/onboarding-program.md", "url": "/handbook/onboarding/onboarding-program"}, {"id": "onboarding/onboarding-tracking", "title": "Onboarding process", "cat": "Onboarding", "path": "contents/handbook/onboarding/onboarding-tracking.md", "url": "/handbook/onboarding/onboarding-tracking"}, {"id": "onboarding/onboarding-data", "title": "Onboarding data", "cat": "Onboarding", "path": "contents/handbook/onboarding/onboarding-data.md", "url": "/handbook/onboarding/onboarding-data"}, {"id": "onboarding/onboarding-conversations-playbook", "title": "Onboarding conversations playbook", "cat": "Onboarding", "path": "contents/handbook/onboarding/onboarding-conversations-playbook.md", "url": "/handbook/onboarding/onboarding-conversations-playbook"}, {"id": "onboarding/sales-handover", "title": "Sales handover", "cat": "Onboarding", "path": "contents/handbook/onboarding/sales-handover.md", "url": "/handbook/onboarding/sales-handover"}, {"id": "onboarding/new-hire-onboarding", "title": "New hire onboarding", "cat": "Onboarding", "path": "contents/handbook/onboarding/new-hire-onboarding.md", "url": "/handbook/onboarding/new-hire-onboarding"}, {"id": "growth/use-case-selling/use-case-selling", "title": "Use-case selling", "cat": "Use-case selling", "path": "contents/handbook/growth/use-case-selling/use-case-selling.md", "url": "/handbook/growth/use-case-selling/use-case-selling"}, {"id": "growth/use-case-selling/product-intelligence", "title": "Product Intelligence", "cat": "Use-case selling", "path": "contents/handbook/growth/use-case-selling/product-intelligence.md", "url": "/handbook/growth/use-case-selling/product-intelligence"}, {"id": "growth/use-case-selling/release-engineering", "title": "Release Engineering", "cat": "Use-case selling", "path": "contents/handbook/growth/use-case-selling/release-engineering.md", "url": "/handbook/growth/use-case-selling/release-engineering"}, {"id": "growth/use-case-selling/observability", "title": "Observability", "cat": "Use-case selling", "path": "contents/handbook/growth/use-case-selling/observability.md", "url": "/handbook/growth/use-case-selling/observability"}, {"id": "growth/use-case-selling/growth-and-marketing", "title": "Growth & Marketing", "cat": "Use-case selling", "path": "contents/handbook/growth/use-case-selling/growth-and-marketing.md", "url": "/handbook/growth/use-case-selling/growth-and-marketing"}, {"id": "growth/use-case-selling/ai-llm-observability", "title": "AI/LLM Observability", "cat": "Use-case selling", "path": "contents/handbook/growth/use-case-selling/ai-llm-observability.md", "url": "/handbook/growth/use-case-selling/ai-llm-observability"}, {"id": "growth/use-case-selling/data-infrastructure", "title": "Data Infrastructure", "cat": "Use-case selling", "path": "contents/handbook/growth/use-case-selling/data-infrastructure.md", "url": "/handbook/growth/use-case-selling/data-infrastructure"}, {"id": "growth/use-case-selling/customer-experience", "title": "Customer Experience", "cat": "Use-case selling", "path": "contents/handbook/growth/use-case-selling/customer-experience.md", "url": "/handbook/growth/use-case-selling/customer-experience"}, {"id": "growth/cross-selling/how-we-upsell-and-cross-sell", "title": "How we upsell and cross-sell", "cat": "Cross-selling", "path": "contents/handbook/growth/cross-selling/how-we-upsell-and-cross-sell.md", "url": "/handbook/growth/cross-selling/how-we-upsell-and-cross-sell"}, {"id": "growth/cross-selling/tracking-cross-sells", "title": "Tracking cross sells", "cat": "Cross-selling", "path": "contents/handbook/growth/cross-selling/tracking-cross-sells.md", "url": "/handbook/growth/cross-selling/tracking-cross-sells"}, {"id": "growth/cross-selling/cross-sell-motions", "title": "Cross sell motions", "cat": "Cross-selling", "path": "contents/handbook/growth/cross-selling/cross-sell-motions.md", "url": "/handbook/growth/cross-selling/cross-sell-motions"}, {"id": "growth/cross-selling/error-tracking-cross-sell", "title": "Error Tracking cross-sell", "cat": "Cross-selling", "path": "contents/handbook/growth/cross-selling/error-tracking-cross-sell.md", "url": "/handbook/growth/cross-selling/error-tracking-cross-sell"}, {"id": "growth/sales/customer-journey", "title": "Customer journey and coverage model", "cat": "Account management", "path": "contents/handbook/growth/sales/customer-journey.md", "url": "/handbook/growth/sales/customer-journey"}, {"id": "growth/sales/account-allocation", "title": "Allocating accounts", "cat": "Account management", "path": "contents/handbook/growth/sales/account-allocation.md", "url": "/handbook/growth/sales/account-allocation"}, {"id": "growth/sales/account-planning", "title": "Account planning", "cat": "Account management", "path": "contents/handbook/growth/sales/account-planning.md", "url": "/handbook/growth/sales/account-planning"}, {"id": "growth/sales/customer-onboarding", "title": "New customer onboarding", "cat": "Account management", "path": "contents/handbook/growth/sales/customer-onboarding.md", "url": "/handbook/growth/sales/customer-onboarding"}, {"id": "cs-and-onboarding/onboarding-success-plan", "title": "Template for onboarding success plan", "cat": "Account management", "path": "contents/handbook/cs-and-onboarding/onboarding-success-plan.md", "url": "/handbook/cs-and-onboarding/onboarding-success-plan"}, {"id": "cs-and-onboarding/foundation-check", "title": "Basic implementation review", "cat": "Account management", "path": "contents/handbook/cs-and-onboarding/foundation-check.md", "url": "/handbook/cs-and-onboarding/foundation-check"}, {"id": "cs-and-onboarding/handling-customer-issues", "title": "Handling customer issues", "cat": "Account management", "path": "contents/handbook/cs-and-onboarding/handling-customer-issues.md", "url": "/handbook/cs-and-onboarding/handling-customer-issues"}, {"id": "account-management/getting-people-to-talk-to-you", "title": "Getting people to talk to you", "cat": "Account management", "path": "contents/handbook/account-management/getting-people-to-talk-to-you.md", "url": "/handbook/account-management/getting-people-to-talk-to-you"}, {"id": "cs-and-onboarding/health-tracking", "title": "Health tracking", "cat": "Account management", "path": "contents/handbook/cs-and-onboarding/health-tracking.md", "url": "/handbook/cs-and-onboarding/health-tracking"}, {"id": "cs-and-onboarding/health-checks", "title": "Customer health checks", "cat": "Account management", "path": "contents/handbook/cs-and-onboarding/health-checks.md", "url": "/handbook/cs-and-onboarding/health-checks"}, {"id": "growth/sales/risk-mitigation-and-churn-prevention", "title": "Risk mitigation and churn prevention", "cat": "Account management", "path": "contents/handbook/growth/sales/risk-mitigation-and-churn-prevention.md", "url": "/handbook/growth/sales/risk-mitigation-and-churn-prevention"}, {"id": "cs-and-onboarding/customer-churn-retros", "title": "Learn from churn", "cat": "Account management", "path": "contents/handbook/cs-and-onboarding/customer-churn-retros.md", "url": "/handbook/cs-and-onboarding/customer-churn-retros"}, {"id": "cs-and-onboarding/churn-reasons", "title": "Common churn reasons", "cat": "Account management", "path": "contents/handbook/cs-and-onboarding/churn-reasons.md", "url": "/handbook/cs-and-onboarding/churn-reasons"}, {"id": "cs-and-onboarding/feature-requests", "title": "Tracking feature requests", "cat": "Account management", "path": "contents/handbook/cs-and-onboarding/feature-requests.md", "url": "/handbook/cs-and-onboarding/feature-requests"}, {"id": "growth/sales/grow-an-account", "title": "Playbook for growing an account", "cat": "Account management", "path": "contents/handbook/growth/sales/grow-an-account.md", "url": "/handbook/growth/sales/grow-an-account"}, {"id": "growth/sales/contract-rules", "title": "Contract rules", "cat": "Contracts & billing", "path": "contents/handbook/growth/sales/contract-rules.md", "url": "/handbook/growth/sales/contract-rules"}, {"id": "growth/sales/contracts", "title": "Creating contracts", "cat": "Contracts & billing", "path": "contents/handbook/growth/sales/contracts.md", "url": "/handbook/growth/sales/contracts"}, {"id": "growth/sales/billing", "title": "Billing", "cat": "Contracts & billing", "path": "contents/handbook/growth/sales/billing.md", "url": "/handbook/growth/sales/billing"}, {"id": "cs-and-onboarding/renewals", "title": "Renewals", "cat": "Contracts & billing", "path": "contents/handbook/cs-and-onboarding/renewals.md", "url": "/handbook/cs-and-onboarding/renewals"}, {"id": "growth/sales/trials", "title": "Trials", "cat": "Contracts & billing", "path": "contents/handbook/growth/sales/trials.md", "url": "/handbook/growth/sales/trials"}, {"id": "growth/sales/refunds", "title": "Refunds", "cat": "Contracts & billing", "path": "contents/handbook/growth/sales/refunds.md", "url": "/handbook/growth/sales/refunds"}, {"id": "growth/sales/sales-and-cs-tools", "title": "Tools", "cat": "Tools & systems", "path": "contents/handbook/growth/sales/sales-and-cs-tools.md", "url": "/handbook/growth/sales/sales-and-cs-tools"}, {"id": "growth/sales/crm", "title": "Managing our CRM", "cat": "Tools & systems", "path": "contents/handbook/growth/sales/crm.md", "url": "/handbook/growth/sales/crm"}, {"id": "growth/sales/lead-scoring", "title": "Lead routing & scoring", "cat": "Tools & systems", "path": "contents/handbook/growth/sales/lead-scoring.md", "url": "/handbook/growth/sales/lead-scoring"}, {"id": "growth/sales/slack-channels", "title": "Shared Slack channels", "cat": "Tools & systems", "path": "contents/handbook/growth/sales/slack-channels.md", "url": "/handbook/growth/sales/slack-channels"}, {"id": "growth/sales/automations", "title": "Automations", "cat": "Tools & systems", "path": "contents/handbook/growth/sales/automations.md", "url": "/handbook/growth/sales/automations"}, {"id": "growth/sales/user-event-streams", "title": "User event streams", "cat": "Tools & systems", "path": "contents/handbook/growth/sales/user-event-streams.md", "url": "/handbook/growth/sales/user-event-streams"}, {"id": "growth/sales/historical-import", "title": "Historical imports", "cat": "Tools & systems", "path": "contents/handbook/growth/sales/historical-import.md", "url": "/handbook/growth/sales/historical-import"}, {"id": "onboarding/metabase-account-analysis", "title": "Metabase account analysis", "cat": "Tools & systems", "path": "contents/handbook/onboarding/metabase-account-analysis.md", "url": "/handbook/onboarding/metabase-account-analysis"}, {"id": "growth/sales/sandboxes", "title": "Creating sandboxes", "cat": "Tools & systems", "path": "contents/handbook/growth/sales/sandboxes.md", "url": "/handbook/growth/sales/sandboxes"}, {"id": "growth/sales/product-enablement", "title": "Product enablement", "cat": "Enablement & resources", "path": "contents/handbook/growth/sales/product-enablement.md", "url": "/handbook/growth/sales/product-enablement"}, {"id": "growth/sales/customer-training", "title": "Running product training sessions", "cat": "Enablement & resources", "path": "contents/handbook/growth/sales/customer-training.md", "url": "/handbook/growth/sales/customer-training"}, {"id": "growth/sales/customer-industry-segments", "title": "Customer industry segments", "cat": "Enablement & resources", "path": "contents/handbook/growth/sales/customer-industry-segments.md", "url": "/handbook/growth/sales/customer-industry-segments"}, {"id": "growth/sales/communications-templates", "title": "Communications templates", "cat": "Enablement & resources", "path": "contents/handbook/growth/sales/communications-templates.md", "url": "/handbook/growth/sales/communications-templates"}, {"id": "growth/sales/customer-faqs", "title": "Customer FAQs", "cat": "Enablement & resources", "path": "contents/handbook/growth/sales/customer-faqs.md", "url": "/handbook/growth/sales/customer-faqs"}, {"id": "growth/sales/turning-knowledge-into-agent-skills", "title": "Turning knowledge into agent skills", "cat": "Enablement & resources", "path": "contents/handbook/growth/sales/turning-knowledge-into-agent-skills.md", "url": "/handbook/growth/sales/turning-knowledge-into-agent-skills"}, {"id": "cs-and-onboarding/new-hire-onboarding-exercise", "title": "New hire onboarding exercise", "cat": "Enablement & resources", "path": "contents/handbook/cs-and-onboarding/new-hire-onboarding-exercise.md", "url": "/handbook/cs-and-onboarding/new-hire-onboarding-exercise"}, {"id": "onboarding/chrome-extension-billing-case-study-wildfire", "title": "Chrome extension billing case study", "cat": "Enablement & resources", "path": "contents/handbook/onboarding/chrome-extension-billing-case-study-wildfire.md", "url": "/handbook/onboarding/chrome-extension-billing-case-study-wildfire"}, {"id": "growth/sales/data-foundations", "title": "Data foundations", "cat": "Enablement & resources", "path": "contents/handbook/growth/sales/data-foundations.md", "url": "/handbook/growth/sales/data-foundations"}, {"id": "growth/sales/customer-onsites", "title": "Customer on-sites", "cat": "Working with customers in person", "path": "contents/handbook/growth/sales/customer-onsites.md", "url": "/handbook/growth/sales/customer-onsites"}, {"id": "cs-and-onboarding/cohort-dinners", "title": "Cohort dinners", "cat": "Working with customers in person", "path": "contents/handbook/cs-and-onboarding/cohort-dinners.md", "url": "/handbook/cs-and-onboarding/cohort-dinners"}];
+const CATS = [{"name": "Product positioning", "section": "Marketing"}, {"name": "Overview", "section": "Sales, CS & Onboarding"}, {"name": "New business", "section": "Sales, CS & Onboarding"}, {"name": "Product-led sales", "section": "Sales, CS & Onboarding"}, {"name": "Customer Success", "section": "Sales, CS & Onboarding"}, {"name": "Forward deployed engineering", "section": "Sales, CS & Onboarding"}, {"name": "Shareable guides", "section": "Sales, CS & Onboarding"}, {"name": "Onboarding", "section": "Sales, CS & Onboarding"}, {"name": "Use-case selling", "section": "Sales, CS & Onboarding"}, {"name": "Cross-selling", "section": "Sales, CS & Onboarding"}, {"name": "Account management", "section": "Sales, CS & Onboarding"}, {"name": "Contracts & billing", "section": "Sales, CS & Onboarding"}, {"name": "Tools & systems", "section": "Sales, CS & Onboarding"}, {"name": "Enablement & resources", "section": "Sales, CS & Onboarding"}, {"name": "Working with customers in person", "section": "Sales, CS & Onboarding"}]; // the handbook's own sidebar groups (src/navs/index.js), plus Product positioning
+const REPO = "https://github.com/PostHog/posthog.com";
+const ENGAGED_AT = 30;
+const dp = d => d.path.replace("contents/handbook/", "");
+
+const REPS = [
+  { id: "alex", name: "Alex Rivera", role: "Account Executive · US East", gh: "arivera-sales", c: "var(--c1)" },
+  { id: "jordan", name: "Jordan Patel", role: "Account Executive · EMEA", gh: "jpatel-sales", c: "var(--c2)" },
+  { id: "sam", name: "Sam Chen", role: "Solutions Engineer · US West", gh: "samchen-se", c: "var(--c3)" },
+  { id: "taylor", name: "Taylor Brooks", role: "Account Executive · US Central", gh: "tbrooks-ae", c: "var(--c4)" },
+  { id: "morgan", name: "Morgan Lee", role: "Customer Success · APAC", gh: "mlee-cs", c: "var(--c5)" },
+];
+const repById = id => REPS.find(r => r.id === id);
+const docById = id => DOCS.find(d => d.id === id);
+const initials = n => n.split(" ").map(w => w[0]).join("");
+
+/* ---------- usage state (populated from /api/stats; never pre-seeded on client) ---------- */
+const DATA = {};
+const SURVEY = {};
+const MISSING = {};
+DOCS.forEach(d => {
+  DATA[d.id] = {};
+  REPS.forEach(rep => {
+    DATA[d.id][rep.id] = { views: 0, engaged: 0, dwell: 0, last: null };
+  });
+  SURVEY[d.id] = { yes: 0, partly: 0, no: 0, mine: {} };
+});
+const COMMENTS = {
+  "error-tracking": [
+    { rep: "jordan", ago: "3 days ago", body: "The iOS objection answer worked on a React Native prospect. Could we add where Android stands too?" },
+    { rep: "sam", ago: "1 week ago", body: "Suggest a small table for the Sentry volume pricing breakpoints. Reps keep asking for the 10M and 20M numbers." },
+  ],
+  "session-replay": [
+    { rep: "taylor", ago: "2 days ago", body: "Proposal: move the FullStory pricing objection above the battle cards. It's what buyers open with." },
+  ],
+  "logs": [{ rep: "alex", ago: "5 days ago", body: "Better Stack came up twice this month. The battle card answered it well, thanks." }],
+  "workflows": [{ rep: "morgan", ago: "2 weeks ago", body: "A customer asked about WhatsApp. Good to see the objection covers it honestly." }],
+  "growth/sales/how-to-do-discovery": [{ rep: "alex", ago: "4 days ago", body: "Could we add three example discovery questions for a team already on Amplitude?" }],
+  "growth/sales/contract-rules": [{ rep: "jordan", ago: "1 week ago", body: "A short summary table at the top would save a lot of scrolling for the common cases." }],
+};
+
+/* ---------- helpers ---------- */
+const sumDoc = id => REPS.reduce((a, r) => { const x = DATA[id][r.id]; a.views += x.views; a.engaged += x.engaged; a.dwell += x.dwell; a.readers += x.views ? 1 : 0; return a; }, { views: 0, engaged: 0, dwell: 0, readers: 0 });
+const sumDocs = ds => ds.reduce((a, d) => { const s = sumDoc(d.id); a.views += s.views; a.engaged += s.engaged; a.dwell += s.dwell; a.opened += s.views ? 1 : 0; return a; }, { views: 0, engaged: 0, dwell: 0, opened: 0 });
+const docsIn = cat => DOCS.filter(d => d.cat === cat);
+const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+function dur(s) { s = Math.round(s); if (s < 60) return s + "s"; const m = Math.floor(s / 60), r = s % 60; return m + "m " + String(r).padStart(2, "0") + "s"; }
+const clock = s => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+// Live API origin: same-origin by default; static hosts (GitHub Pages) query the CORS-enabled Netlify deployment.
+const API_BASE = /\.github\.io$/.test(location.hostname) ? "https://posthog-handbook-signal.netlify.app/" : "";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const ago = d => d === null ? "" : d === 0 ? "now" : d + "d ago";
+const helpful = id => { const s = SURVEY[id]; const n = s.yes + s.partly + s.no; return { n, p: pct(s.yes, n) }; };
+const fileUrl = d => `${REPO}/blob/master/${d.path}`;
+const av = (rep, cls = "") => `<span class="av ${cls}" style="background:${rep.c}">${initials(rep.name)}</span>`;
+const distinctId = r => "rep_" + r.name.toLowerCase().replace(/ /g, "_");
+const repProps = r => ({ name: r.name, role: r.role.split(" · ")[0], region: r.role.split(" · ")[1], team: "Sales" });
+
+/* ---------- state ---------- */
+const state = { doc: "error-tracking", rep: "alex", view: "team", statsLoading: true };
+let S = null; // live visit
+// a visit still under 30s is neither engaged nor a bounce yet
+const reading = (docId, repId) => S && !S.engaged && S.doc === docId && (!repId || S.rep === repId) ? 1 : 0;
+
+/* ---------- event stream ---------- */
+const EVENTS = [];
+function lit(v) {
+  if (typeof v === "string") return `<span class="s">'${esc(v)}'</span>`;
+  if (v && typeof v === "object") return "{ " + Object.entries(v).map(([k, x]) => `${/^[$a-z_][\w$]*$/i.test(k) ? k : `'${k}'`}: ${lit(x)}`).join(", ") + " }";
+  return String(v);
+}
+function cap(fn, ...args) {
+  EVENTS.unshift({ t: new Date(), fn, html: `<span class="fn">posthog.${fn}</span>(${args.map(lit).join(", ")})` });
+  if (EVENTS.length > 80) EVENTS.pop();
+  document.getElementById("evCt").textContent = EVENTS.length;
+  if (!document.getElementById("drawer").hidden) renderEvents();
+  try {
+    if (fn === "capture") {
+      const evName = args[0];
+      const rawProps = args[1] && typeof args[1] === "object" ? { ...args[1] } : {};
+      const syncId = (typeof crypto !== "undefined" && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+      const phProps = { ...rawProps, rep_id: state.rep, ph_sync_id: syncId };
+      if (window.posthog && typeof window.posthog.capture === "function" && window.posthog.__loaded) {
+        window.posthog.capture(evName, phProps);
+      }
+      if (rawProps.doc_path && !state.static) {
+        fetch(API_BASE + "api/event-sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            event: evName,
+            distinct_id: distinctId(repById(state.rep)),
+            properties: phProps,
+          }),
+          keepalive: true,
+        }).catch(() => {});
+      }
+    } else if (fn === "identify" && window.posthog && typeof window.posthog.identify === "function" && window.posthog.__loaded) {
+      window.posthog.identify(args[0], args[1]);
+    } else if (fn === "reset" && window.posthog && typeof window.posthog.reset === "function" && window.posthog.__loaded) {
+      window.posthog.reset();
+    }
+  } catch (e) {
+    console.warn("posthog call error:", e);
+  }
+}
+function renderEvents() {
+  document.getElementById("evs").innerHTML = EVENTS.map(e =>
+    `<div class="ev"><div class="tm"><span>${e.t.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" })}</span><b>${e.fn}</b></div><pre>${e.html}</pre></div>`).join("");
+}
+
+let toastT;
+function toast(msg, good) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.className = "toast" + (good ? " good" : ""); t.hidden = false;
+  clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 3200);
+}
+
+/* ---------- visits: views, 30s engaged reads, bounces ---------- */
+function startVisit() {
+  const d = docById(state.doc), rec = DATA[d.id][state.rep];
+  rec.views++; rec.last = 0;
+  S = { doc: d.id, rep: state.rep, dwell: 0, engaged: false, seen: new Set() };
+  cap("capture", "$pageview", { $current_url: `https://posthog.com${d.url}`, doc_path: dp(d), category: d.cat });
+  renderVisit();
+}
+function endVisit() {
+  if (!S) return;
+  const d = docById(S.doc);
+  DATA[S.doc][S.rep].dwell += S.dwell;
+  cap("capture", "enablement_page_left", { doc_path: dp(d), dwell_seconds: S.dwell, engaged_read: S.engaged });
+  if (!S.engaged) toast(`Bounce logged: left ${d.title} after ${S.dwell}s`);
+  S = null;
+}
+setInterval(() => {
+  if (!S || document.hidden || state.view !== "read") return;
+  S.dwell++;
+  if (S.dwell === ENGAGED_AT && !S.engaged) {
+    S.engaged = true;
+    DATA[S.doc][S.rep].engaged++;
+    const d = docById(S.doc);
+    cap("capture", "enablement_engaged_read", { doc_path: dp(d), category: d.cat, threshold_seconds: ENGAGED_AT });
+    toast("Engaged read counted: 30 seconds on this page", true);
+    renderStats(); renderReaders();
+  }
+  renderVisit();
+}, 1000);
+document.addEventListener("visibilitychange", renderVisit);
+
+function renderVisit() {
+  const dw = S ? S.dwell : 0, ok = S && S.engaged;
+  document.getElementById("ringFg").style.strokeDashoffset = 119.4 * (1 - Math.min(dw, ENGAGED_AT) / ENGAGED_AT);
+  document.getElementById("visit").classList.toggle("ok", !!ok);
+  document.getElementById("visitT").textContent = ok ? `Engaged read · ${clock(dw)}` : `Reading ${clock(dw)}`;
+  document.getElementById("visitN").textContent = ok
+    ? "Counted. Your time keeps adding to this page's average."
+    : document.hidden ? "Paused while this tab is hidden." : "At 0:30 this counts as an engaged read. Leave sooner and it counts as a bounce.";
+  const pill = document.getElementById("stripDwell");
+  if (pill) { pill.classList.toggle("ok", !!ok); pill.querySelector("span").textContent = ok ? `Engaged · ${clock(dw)}` : `${clock(dw)} / 0:30`; }
+}
+
+/* ---------- reading view (live Markdown fetched from PostHog/posthog.com) ---------- */
+const LABELS = ["Their approach", "Where PostHog wins", "Honest concession", "Follow-up", "Answer", "Problem", "Solution", "Supporting features"];
+const TEAM_NAMES = { "sales-cs": "Sales & CS", "wizard-and-docs": "Wizard & Docs", "forward-deployed-engineering": "Forward Deployed Engineering" };
+const canonicalUrl = d => `https://posthog.com${d.url}`;
+const rawUrl = d => `https://raw.githubusercontent.com/PostHog/posthog.com/master/${d.path}`;
+function slug(s) { return s.toLowerCase().replace(/\(.*?\)/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+function kindOf(t) { t = t.toLowerCase(); return t.startsWith("battle") ? "battle" : t.startsWith("objection") ? "objection" : t.startsWith("messaging") ? "messaging" : ""; }
+
+function cleanMarkdown(raw) {
+  let body = String(raw || "");
+  const fm = body.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n/);
+  if (fm) body = body.slice(fm[0].length);
+  body = body.replace(/<PrivateLink\s+url=(["'])([^"']+)\1\s*>([\s\S]*?)<\/PrivateLink>/g, '[$3]($2 "Internal link")');
+  body = body.replace(/<SmallTeam\s+slug=(["'])([^"']+)\1\s*\/>/g, (_, q, s) => TEAM_NAMES[s] || s.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()));
+  body = body.replace(/<TeamMember\s+name=(["'])([^"']+)\1[^>]*\/>/g, "$2");
+  body = body.replace(/<\/?CalloutBox[^>]*>/g, "");
+  body = body.replace(/!\[([^\]]*)\]\(([^)\s]+)[^)]*\)/g, (_, alt, url) => `[Image: ${alt || "screenshot"}](${url})`);
+  return body.trim();
+}
+
+const inflightDocs = new Map();
+async function loadDocMarkdown(d) {
+  if (typeof d.md === "string" && d.md.length > 0) return d.md;
+  if (inflightDocs.has(d.id)) return inflightDocs.get(d.id);
+  const p = (async () => {
+    try {
+      const apiRes = state.static ? null : await fetch(`${API_BASE}api/doc?id=${encodeURIComponent(d.id)}`);
+      if (apiRes && apiRes.ok) {
+        const payload = await apiRes.json();
+        if (payload && typeof payload.md === "string") {
+          d.md = payload.md;
+          d.fetchedAt = payload.fetchedAt || new Date().toISOString();
+          d.src = "live";
+          return d.md;
+        }
+      }
+    } catch (_) {}
+    const ghRes = await fetch(rawUrl(d));
+    if (!ghRes.ok) throw new Error(`GitHub HTTP ${ghRes.status} fetching ${d.path}`);
+    const raw = await ghRes.text();
+    d.md = cleanMarkdown(raw);
+    d.fetchedAt = new Date().toISOString();
+    d.src = "live";
+    return d.md;
+  })();
+  inflightDocs.set(d.id, p);
+  try {
+    return await p;
+  } finally {
+    inflightDocs.delete(d.id);
+  }
+}
+
+const GH_ICON = `<svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.83-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>`;
+const timeOf = t => new Date(t).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+function srcText(d) {
+  if (d.src === "live") return { mode: "live", label: `Live from <b>PostHog/posthog.com</b>`, plain: `Fetched live from GitHub at ${timeOf(d.fetchedAt)}` };
+  if (d.src === "error") return { mode: "snap", label: `<b>PostHog/posthog.com</b> · fetch failed`, plain: `GitHub couldn't be reached for this page.` };
+  return { mode: "load", label: `Loading from <b>PostHog/posthog.com</b>…`, plain: "Fetching from GitHub…" };
+}
+function renderSrc(d) {
+  const s = srcText(d), el = document.getElementById("src");
+  el.dataset.mode = s.mode;
+  el.innerHTML = `
+    <button class="src-state" id="srcState" aria-haspopup="dialog" title="${esc(s.plain)}"><i class="dot"></i><span>${s.label}</span></button>
+    <span class="src-links">
+      <a href="${canonicalUrl(d)}" target="_blank" rel="noopener" title="${esc(canonicalUrl(d))}">posthog.com ↗</a>
+      <a href="${fileUrl(d)}" target="_blank" rel="noopener" title="${esc(d.path)}">${GH_ICON}GitHub ↗</a>
+    </span>`;
+  document.getElementById("srcState").onclick = e => openPop("aboutPop", e.currentTarget);
+  if (!document.getElementById("aboutPop").hidden) renderAbout();
+}
+function renderAbout() {
+  const d = docById(state.doc), s = srcText(d);
+  document.getElementById("abCount").textContent = `${DOCS.length} pages in ${CATS.length} categories`;
+  document.getElementById("abState").innerHTML = `<a href="${fileUrl(d)}" target="_blank" rel="noopener" class="mono">${esc(dp(d))}</a><br><span style="color:var(--steel)">${esc(s.plain)}</span>`;
+  document.getElementById("abCloud").textContent = state.statsError ? "PostHog Cloud query failed" : state.statsSource === "posthog-cloud" ? `Live from PostHog Cloud${state.projectId ? ` (project ${state.projectId})` : ""}` : state.statsSource === "snapshot" ? `Snapshot of PostHog Cloud${state.projectId ? ` (project ${state.projectId})` : ""}, captured ${state.snapshotAt ? new Date(state.snapshotAt).toLocaleDateString() : "earlier"}` : "Connecting to PostHog Cloud…";
+}
+
+let observer;
+function renderMarkdownBody(d, mdText) {
+  const tmp = document.createElement("div");
+  tmp.innerHTML = marked.parse(mdText);
+  tmp.querySelectorAll("a[href]").forEach(a => {
+    const h = a.getAttribute("href");
+    if (h.startsWith("/")) a.href = "https://posthog.com" + h;
+    a.target = "_blank"; a.rel = "noopener";
+  });
+  tmp.querySelectorAll("p").forEach(p => {
+    const s = p.firstElementChild;
+    if (!s || s.tagName !== "STRONG" || p.firstChild !== s) return;
+    const t = s.textContent.replace(/:$/, "").trim();
+    if (!LABELS.includes(t)) return;
+    s.className = "lbl" + (t === "Where PostHog wins" ? " win" : "");
+    s.textContent = t;
+    if (t === "Honest concession") p.classList.add("concede");
+  });
+  // group into sections at each h2, and into cards at each h3 inside battle/objection/messaging sections
+  const md = document.getElementById("md");
+  md.innerHTML = "";
+  let cur = document.createElement("div"); cur.className = "intro"; md.appendChild(cur);
+  let card = null;
+  const chips = [];
+  [...tmp.childNodes].forEach(n => {
+    if (n.nodeType !== 1) return;
+    if (n.tagName === "H2") {
+      const title = n.textContent.replace(/\s*\(.*?\)\s*/g, "").trim();
+      cur = document.createElement("section"); cur.className = "sec"; cur.id = "s-" + slug(n.textContent);
+      cur.dataset.kind = kindOf(title); cur.dataset.title = title;
+      md.appendChild(cur); card = null;
+      chips.push({ id: cur.id, title });
+      cur.appendChild(n); return;
+    }
+    if (n.tagName === "H3" && cur.dataset && cur.dataset.kind) {
+      card = document.createElement("div"); card.className = "card"; cur.appendChild(card);
+    }
+    (card || cur).appendChild(n);
+  });
+  document.getElementById("chips").innerHTML = chips.map(c => `<a href="#${c.id}" data-id="${c.id}">${esc(c.title)}</a>`).join("");
+  document.getElementById("chips").hidden = !chips.length;
+
+  if (observer) observer.disconnect();
+  observer = new IntersectionObserver(es => {
+    es.forEach(e => {
+      if (!e.isIntersecting) return;
+      const id = e.target.id;
+      document.querySelectorAll("#chips a").forEach(a => a.classList.toggle("on", a.dataset.id === id));
+      if (S && !S.seen.has(id) && S.dwell > 2) {
+        S.seen.add(id);
+        cap("capture", "enablement_section_viewed", { doc_path: dp(d), section: e.target.dataset.title });
+      }
+    });
+  }, { rootMargin: "-30% 0px -60% 0px" });
+  md.querySelectorAll("section.sec").forEach(s => observer.observe(s));
+}
+
+async function renderDoc() {
+  const d = docById(state.doc);
+  document.getElementById("docTitle").textContent = d.title;
+  document.getElementById("crumb").innerHTML = `<span class="cat">${esc(d.cat)}</span>`;
+  if (!(typeof d.md === "string" && d.md.length > 0)) d.src = "load";
+  renderSrc(d);
+
+  if (typeof d.md === "string" && d.md.length > 0) {
+    renderMarkdownBody(d, d.md);
+    return;
+  }
+
+  if (observer) observer.disconnect();
+  document.getElementById("chips").innerHTML = "";
+  document.getElementById("chips").hidden = true;
+  const md = document.getElementById("md");
+  md.innerHTML = `<div class="md-loading">Fetching live Markdown from <strong>github.com/PostHog/posthog.com</strong> (<code>${esc(d.path)}</code>)…</div>`;
+
+  try {
+    const mdText = await loadDocMarkdown(d);
+    if (state.doc !== d.id) return;
+    renderSrc(d);
+    renderMarkdownBody(d, mdText);
+  } catch (err) {
+    d.src = "error";
+    if (state.doc !== d.id) return;
+    renderSrc(d);
+    md.innerHTML = `<div class="md-loading" style="border-color:var(--warn);color:var(--warn)">Failed to fetch live Markdown from PostHog/posthog.com (${esc(err.message || err)}). <a href="${canonicalUrl(d)}" target="_blank" rel="noopener">Open canonical page on posthog.com ↗</a> or <a href="${fileUrl(d)}" target="_blank" rel="noopener">view on GitHub ↗</a>.</div>`;
+  }
+}
+
+const STATS_LOADING_HTML = `<div class="md-loading stats-loading"><i></i>Loading live numbers from PostHog Cloud…</div>`;
+
+function statsBadge() {
+  if (state.statsLoading) return `<span class="sample">Loading…</span>`;
+  if (state.statsError) return `<span class="sample" style="border-color:var(--warn);color:var(--warn)">PostHog error</span>`;
+  if (state.statsSource === "posthog-cloud") return `<span class="sample">PostHog Cloud</span>`;
+  if (state.statsSource === "snapshot") return `<span class="sample">PostHog snapshot</span>`;
+  return `<span class="sample">Unconfigured</span>`;
+}
+
+function renderStats() {
+  const d = docById(state.doc), s = sumDoc(d.id), live = reading(d.id), bounces = s.views - s.engaged - live, h = helpful(d.id), r = pct(s.engaged, s.views);
+  const errHtml = state.statsError
+    ? `<div class="fine" style="color:var(--warn);margin:0 0 10px">PostHog Cloud query failed: ${esc(state.statsError)}</div>`
+    : "";
+  if (state.statsLoading) {
+    document.getElementById("statsPanel").innerHTML = `<div class="eyebrow">This page · last 30 days ${statsBadge()}</div>${STATS_LOADING_HTML}`;
+    document.getElementById("strip").innerHTML = `<span class="dwellpill" id="stripDwell"><i></i><span>0:00 / 0:30</span></span>`;
+    renderVisit();
+    return;
+  }
+  document.getElementById("statsPanel").innerHTML = `
+    <div class="eyebrow">This page · last 30 days ${statsBadge()}</div>
+    ${errHtml}
+    <div class="kpis">
+      <div class="kpi"><b>${s.views}</b><span>Views</span></div>
+      <div class="kpi"><b>${s.engaged}</b><span>Engaged reads (30s+)</span></div>
+      <div class="kpi"><b>${r}%</b><span>Engaged read rate</span></div>
+      <div class="kpi"><b>${dur(s.views ? s.dwell / s.views : 0)}</b><span>Avg. time on page</span></div>
+    </div>
+    <div class="split">
+      <div class="bar2" aria-hidden="true"><i class="e" style="width:${r}%"></i><i class="b" style="width:${pct(bounces, s.views)}%"></i></div>
+      <div class="legend"><span><i style="background:var(--good)"></i>${s.engaged} engaged</span><span><i style="background:var(--warn)"></i>${bounces} bounced under 30s</span>${live ? `<span><i style="background:var(--grid)"></i>1 reading now</span>` : ""}${h.n ? `<span>${h.p}% found it helpful</span>` : ""}</div>
+    </div>`;
+  document.getElementById("strip").innerHTML = `
+    <span class="dwellpill" id="stripDwell"><i></i><span>0:00 / 0:30</span></span>
+    <div class="s"><b>${s.views}</b><span>views</span></div>
+    <div class="s"><b>${r}%</b><span>engaged reads</span></div>
+    <div class="s"><b>${dur(s.views ? s.dwell / s.views : 0)}</b><span>avg. time</span></div>
+    <div class="s"><b>${s.readers}/5</b><span>reps read it</span></div>
+    <a href="#rail">Who read it ↓</a>`;
+  renderVisit();
+}
+
+function renderReaders() {
+  const d = docById(state.doc);
+  if (state.statsLoading) { document.getElementById("readersPanel").innerHTML = `<div class="eyebrow">Who's read it</div>${STATS_LOADING_HTML}`; return; }
+  const rows = REPS.map(r => ({ r, x: DATA[d.id][r.id] }))
+    .sort((a, b) => (b.r.id === state.rep) - (a.r.id === state.rep) || b.x.engaged - a.x.engaged || b.x.views - a.x.views);
+  document.getElementById("readersPanel").innerHTML = `
+    <div class="eyebrow">Who's read it</div>
+    <div class="readers">${rows.map(({ r, x }) => {
+      const me = r.id === state.rep ? '<span class="you">YOU</span>' : "";
+      if (!x.views) return `<div class="rd none">${av(r)}<div><div class="who">${esc(r.name)} ${me}</div><div class="what">Not opened in 30 days</div></div><span></span></div>`;
+      const b = x.views - x.engaged - reading(d.id, r.id);
+      return `<div class="rd">${av(r)}<div><div class="who">${esc(r.name)} ${me}</div><div class="what"><span class="g">${x.engaged} engaged</span>${b ? ` · <span class="w">${b} bounce${b > 1 ? "s" : ""}</span>` : ""} · ${dur(x.dwell / x.views)} avg</div></div><span class="when">${ago(x.last)}</span></div>`;
+    }).join("")}</div>`;
+}
+
+const surveyDraft = {};
+function renderSurvey() {
+  const d = docById(state.doc), sv = SURVEY[d.id], mine = sv.mine[state.rep], key = d.id + ":" + state.rep;
+  const el = document.getElementById("surveyPanel");
+  const head = `<div class="eyebrow">PostHog survey <span class="mono" style="text-transform:none;letter-spacing:0">enablement-helpful</span></div>`;
+  if (mine) {
+    const h = helpful(d.id), w = v => pct(v, h.n);
+    el.innerHTML = head + `<div class="thanks">Thanks, ${esc(repById(state.rep).name.split(" ")[0])}. You answered "${esc(mine)}".</div>
+      <div class="res"><div class="bar2" aria-hidden="true"><i style="width:${w(sv.yes)}%;background:var(--good)"></i><i style="width:${w(sv.partly)}%;background:var(--signal)"></i><i style="width:${w(sv.no)}%;background:var(--warn)"></i></div>
+      <div class="legend"><span><i style="background:var(--good)"></i>Yes ${sv.yes}</span><span><i style="background:var(--signal)"></i>Partly ${sv.partly}</span><span><i style="background:var(--warn)"></i>No ${sv.no}</span><span>${h.n} responses</span></div></div>`;
+    return;
+  }
+  if (surveyDraft[key]) {
+    el.innerHTML = head + `<div class="q">What was missing for your deal?</div>
+      <label for="svText" class="fine" style="margin:0">Goes to the page owner with your name and this page.</label>
+      <textarea id="svText" placeholder="e.g. I needed a line on pricing at 50M events"></textarea>
+      <div class="row"><button class="btn pri" id="svSend">Send answer</button><button class="btn" id="svSkip">Send without a note</button></div>`;
+    document.getElementById("svSend").onclick = () => submitSurvey(surveyDraft[key], document.getElementById("svText").value.trim());
+    document.getElementById("svSkip").onclick = () => submitSurvey(surveyDraft[key], "");
+    return;
+  }
+  const h = helpful(d.id);
+  el.innerHTML = head + `<div class="q">Did this page help you on a live deal?</div>
+    <div class="choices"><button data-a="Yes">Yes</button><button data-a="Partly">Partly</button><button data-a="No">No</button></div>
+    <div class="fine">${h.n ? `${h.n} reps have answered. ${h.p}% said yes.` : "Nobody has answered yet."}</div>`;
+  el.querySelectorAll(".choices button").forEach(b => b.onclick = () => {
+    if (b.dataset.a === "Yes") return submitSurvey("Yes", "");
+    surveyDraft[key] = b.dataset.a; renderSurvey();
+  });
+}
+function submitSurvey(ans, note) {
+  // PostHog links answers to a survey by UUID (from /api/config); never send the name instead.
+  if (!state.surveyId) { toast("Survey is not ready yet. Try again in a moment."); return; }
+  const d = docById(state.doc), sv = SURVEY[d.id];
+  sv[ans === "Yes" ? "yes" : ans === "Partly" ? "partly" : "no"]++;
+  sv.mine[state.rep] = ans;
+  delete surveyDraft[d.id + ":" + state.rep];
+  if (note) (MISSING[d.id] = MISSING[d.id] || []).unshift({ rep: state.rep, text: note });
+  const props = { $survey_id: state.surveyId, $survey_name: "enablement-helpful", $survey_response: ans, doc_path: dp(d) };
+  if (note) props.$survey_response_1 = note;
+  cap("capture", "survey sent", props);
+  toast("Survey answer sent to PostHog", true);
+  renderSurvey(); renderStats();
+}
+
+function renderGitHub() {
+  const d = docById(state.doc), cs = COMMENTS[d.id] || [];
+  const issue = `${REPO}/issues/new?title=${encodeURIComponent(`Sales feedback: ${d.title} (${d.cat})`)}&body=${encodeURIComponent(`Page: ${fileUrl(d)}\nCanonical: ${canonicalUrl(d)}\n\nFeedback from the field:\n\n`)}`;
+  document.getElementById("ghPanel").innerHTML = `
+    <div class="eyebrow">Source of truth & GitHub ${cs.length ? '<span class="sample">Sample comments</span>' : ""}</div>
+    <div class="ghpath"><a href="${fileUrl(d)}" target="_blank" rel="noopener">${esc(d.path)} ↗</a><br><a href="${canonicalUrl(d)}" target="_blank" rel="noopener">https://posthog.com${esc(d.url)} ↗</a></div>
+    ${cs.length ? cs.map(c => { const r = repById(c.rep); return `<div class="cm">${av(r, "sm")}<div><div class="h"><b>@${r.gh}</b> · ${c.ago}</div><p>${esc(c.body)}</p></div></div>`; }).join("")
+      : `<div class="empty">No comments on this page yet. Start the thread on GitHub, where the markdown lives.</div>`}
+    <div class="row" style="margin-top:8px"><a class="btn pri" href="${issue}" target="_blank" rel="noopener">Comment on GitHub</a><a class="btn" href="${REPO}/edit/master/${d.path}" target="_blank" rel="noopener">Suggest an edit</a></div>
+    <div class="fine">Opens PostHog/posthog.com on GitHub in a new tab. Nothing is posted until you submit it there.</div>`;
+}
+
+function renderRead() { renderDoc(); renderStats(); renderReaders(); renderSurvey(); renderGitHub(); }
+
+/* ---------- team view ---------- */
+// Rolls up by the handbook's own categories so it scales: 121 pages read as 15 rows, a click opens the pages inside.
+let teamSort = "views";
+const openCats = new Set();
+const rateOf = s => pct(s.engaged, s.views);
+function catHelpful(ds) { let y = 0, n = 0; ds.forEach(d => { const h = SURVEY[d.id]; y += h.yes; n += h.yes + h.partly + h.no; }); return pct(y, n); }
+function usageCells(s, cov, helpfulPct) {
+  const r = rateOf(s);
+  return `<td class="cov">${cov}</td><td class="r">${s.views}</td>
+    <td class="bars">${s.views ? `<div class="bar2"><i style="width:${r}%;background:var(--good)"></i><i style="width:${100 - r}%;background:var(--warn);opacity:.75"></i></div>` : ""}</td>
+    <td class="r">${s.views ? `<span class="pill ${r >= 50 ? "g" : "w"}">${r}%</span>` : `<span class="fine" style="margin:0">–</span>`}</td>
+    <td class="r">${s.views ? dur(s.dwell / s.views) : "–"}</td><td class="r">${helpfulPct}%</td>`;
+}
+function renderTeam() {
+  const all = sumDocs(DOCS), never = DOCS.filter(d => !sumDoc(d.id).views);
+  const sorters = {
+    views: (a, b) => b.s.views - a.s.views, rate: (a, b) => rateOf(b.s) - rateOf(a.s),
+    bounce: (a, b) => rateOf(a.s) - rateOf(b.s), coverage: (a, b) => a.s.opened / a.ds.length - b.s.opened / b.ds.length,
+  };
+  const cats = CATS.map(c => { const ds = docsIn(c.name); return { c, ds, s: sumDocs(ds) }; }).sort(sorters[teamSort]);
+  const watch = DOCS.map(d => ({ d, s: sumDoc(d.id) })).filter(x => x.s.views >= 6).sort((a, b) => rateOf(a.s) - rateOf(b.s)).slice(0, 3);
+  const me = state.rep;
+  const grid = CATS.map(c => REPS.map(r => docsIn(c.name).reduce((a, d) => { const x = DATA[d.id][r.id]; a.e += x.engaged; a.v += x.views; a.o += x.views ? 1 : 0; return a; }, { e: 0, v: 0, o: 0, n: docsIn(c.name).length })));
+  const gmax = Math.max(...grid.flat().map(g => g.e));
+  const neverByCat = CATS.map(c => ({ c, ds: never.filter(d => d.cat === c.name) })).filter(x => x.ds.length);
+
+  const errHtml = state.statsError
+    ? `<div class="wi" style="border-color:var(--warn);color:var(--warn)">PostHog Cloud query failed: ${esc(state.statsError)}</div>`
+    : "";
+  document.getElementById("team").innerHTML = `
+    <div>
+      <h1>Sales enablement usage &amp; engagement</h1>
+      <div class="sub">An independent proof of concept, not a PostHog product, showing how PostHog can measure usage across a sales enablement hub: <code>posthog-js</code> custom events, 30-second engaged-read dwell tracking, API surveys and HogQL. All ${DOCS.length} pages are fetched live from the public PostHog/posthog.com handbook on GitHub, with no Markdown stored here. The last-30-day numbers come from five fictional sales rep personas; the rep switcher in the top bar is a demo control. A view of 30 seconds or more is an engaged read; anything shorter is a bounce. ${statsBadge()}</div>
+    </div>
+    ${errHtml}
+    <div class="tiles">
+      <div class="tile"><b>${all.views}</b><span>Page views</span></div>
+      <div class="tile"><b>${rateOf(all)}%</b><span>Engaged read rate (30s+)</span></div>
+      <div class="tile"><b>${all.views - all.engaged}</b><span>Bounces under 30s</span></div>
+      <div class="tile"><b>${all.opened}<small>/${DOCS.length}</small></b><span>Pages opened by anyone</span></div>
+      <div class="tile"><b>${never.length}</b><span>Pages nobody opened</span></div>
+    </div>
+    <div class="cols">
+      <div>
+        <div class="h2row"><h2>Usage by category</h2>
+          <div class="sorts" role="group" aria-label="Sort categories">
+            <button data-s="views" aria-pressed="${teamSort === "views"}">Most viewed</button>
+            <button data-s="rate" aria-pressed="${teamSort === "rate"}">Most engaged</button>
+            <button data-s="bounce" aria-pressed="${teamSort === "bounce"}">Most bounced</button>
+            <button data-s="coverage" aria-pressed="${teamSort === "coverage"}">Least covered</button>
+          </div></div>
+        <div class="scroll"><table class="lb">
+          <thead><tr><th>Category · page</th><th>Opened</th><th class="r">Views</th><th>Engaged vs bounced</th><th class="r">Engaged</th><th class="r">Avg. time</th><th class="r">Helpful</th></tr></thead>
+          <tbody>${cats.map(({ c, ds, s }) => {
+            const open = openCats.has(c.name), cp = pct(s.opened, ds.length);
+            const head = `<tr class="cat" data-cat="${esc(c.name)}" tabindex="0" aria-expanded="${open}">
+              <td><div class="tt"><svg class="caret" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M3 1.5 6.5 5 3 8.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>${esc(c.name)}</div><div class="ff">${ds.length} pages · ${esc(c.section)}</div></td>
+              ${usageCells(s, `<span class="covbar"><i style="width:${cp}%"></i></span><span class="num">${s.opened}/${ds.length}</span>`, catHelpful(ds))}</tr>`;
+            if (!open) return head;
+            return head + ds.map(d => ({ d, s: sumDoc(d.id) })).sort((a, b) => sorters[teamSort === "coverage" ? "views" : teamSort](a, b)).map(({ d, s }) => `
+              <tr class="sub" data-doc="${d.id}" tabindex="0"><td><div class="tt">${esc(d.title)}</div></td>
+              ${usageCells(s, s.views ? `<span class="fine" style="margin:0">${s.readers}/5 reps</span>` : `<span class="pill w">Never</span>`, helpful(d.id).p)}</tr>`).join("");
+          }).join("")}</tbody></table></div>
+      </div>
+      <div class="side">
+        <div>
+          <div class="h2row"><h2>Bounce watch</h2></div>
+          <div class="watch">${watch.map(({ d, s }) => `
+            <div class="wi"><div class="wh"><button data-doc="${d.id}">${esc(d.title)}</button><span class="pill w">${100 - rateOf(s)}% bounce</span></div>
+            <div class="ws">${esc(d.cat)} · ${s.views - s.engaged} of ${s.views} views ended in under 30 seconds.</div>
+            ${(MISSING[d.id] || []).slice(0, 2).map(m => `<blockquote>"${esc(m.text)}" <span class="fine">· ${esc(repById(m.rep).name)}, survey</span></blockquote>`).join("") || `<div class="fine">No survey notes yet.</div>`}
+            </div>`).join("")}</div>
+        </div>
+        <div>
+          <div class="h2row"><h2>Nobody opened these</h2><span class="fine" style="margin:0">${never.length} pages, last 30 days</span></div>
+          <div class="wi never">${neverByCat.map(({ c, ds }) => `<div class="nv"><div class="nvc">${esc(c.name)} <span class="num">${ds.length}</span></div><div class="nvl">${ds.map(d => `<button data-doc="${d.id}">${esc(d.title)}</button>`).join("")}</div></div>`).join("")}</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="h2row"><h2>Who reads what</h2><span class="fine" style="margin:0">Engaged reads per category and rep, with how many of the category's pages each rep has opened.</span></div>
+      <div class="scroll"><table class="hm">
+        <thead><tr><th style="text-align:left">Category</th>${REPS.map(r => `<th class="${r.id === me ? "me" : ""}">${esc(r.name)}${r.id === me ? ' <span class="you">YOU</span>' : ""}</th>`).join("")}</tr></thead>
+        <tbody>${CATS.map((c, i) => `<tr><td class="rn">${esc(c.name)}</td>${grid[i].map(g => {
+          if (!g.v) return `<td><div class="cell none" title="Not opened">–</div></td>`;
+          if (!g.e) return `<td><div class="cell bounce" title="${g.v} views, all bounced">0<small>${g.o}/${g.n} pages</small></div></td>`;
+          const a = .15 + .85 * g.e / gmax;
+          return `<td><div class="cell" title="${g.e} engaged reads across ${g.o} of ${g.n} pages" style="background:color-mix(in srgb, var(--signal) ${Math.round(a * 100)}%, var(--surface));color:${a > .55 ? "var(--signal-ink)" : "var(--ink)"}">${g.e}<small>${g.o}/${g.n} pages</small></div></td>`;
+        }).join("")}</tr>`).join("")}</tbody></table></div>
+    </div>`;
+  const t = document.getElementById("team");
+  if (state.statsLoading) {
+    while (t.children.length > 1) t.lastElementChild.remove();
+    t.insertAdjacentHTML("beforeend", STATS_LOADING_HTML);
+    return;
+  }
+  t.querySelectorAll(".sorts button").forEach(b => b.onclick = () => { teamSort = b.dataset.s; renderTeam(); });
+  t.querySelectorAll("tr.cat").forEach(tr => {
+    const toggle = () => { const n = tr.dataset.cat; openCats.has(n) ? openCats.delete(n) : openCats.add(n); renderTeam(); };
+    tr.addEventListener("click", toggle);
+    tr.addEventListener("keydown", e => { if (e.key === "Enter") toggle(); });
+  });
+  t.querySelectorAll("[data-doc]").forEach(el => {
+    el.addEventListener("click", () => openDoc(el.dataset.doc));
+    el.addEventListener("keydown", e => { if (e.key === "Enter") openDoc(el.dataset.doc); });
+  });
+}
+
+/* ---------- navigation ---------- */
+function renderDocBtn() {
+  const d = docById(state.doc), empty = state.view !== "read";
+  document.getElementById("docBtn").classList.toggle("empty", empty);
+  document.getElementById("docBtnTitle").textContent = empty ? `Search ${DOCS.length} pages` : d.title;
+  document.getElementById("docBtnFolder").textContent = empty ? "" : d.cat;
+}
+function showView(v) {
+  state.view = v;
+  renderDocBtn();
+  document.getElementById("readView").hidden = v !== "read";
+  document.getElementById("teamView").hidden = v !== "team";
+  document.getElementById("vRead").setAttribute("aria-pressed", v === "read");
+  document.getElementById("vTeam").setAttribute("aria-pressed", v === "team");
+}
+function setView(v) {
+  if (v === state.view) return;
+  closePops();
+  if (v === "team") { endVisit(); showView("team"); renderTeam(); cap("capture", "$pageview", { $current_url: "/team-usage" }); }
+  else { showView("read"); startVisit(); renderRead(); }
+  window.scrollTo(0, 0);
+}
+function openDoc(id) {
+  closePops();
+  if (id === state.doc && state.view === "read") return;
+  if (state.view === "read") endVisit();
+  state.doc = id;
+  showView("read");
+  startVisit(); renderRead();
+  window.scrollTo(0, 0);
+}
+function setRep(id) {
+  closePops();
+  if (id === state.rep) return;
+  if (state.view === "read") endVisit();
+  state.rep = id;
+  const r = repById(id);
+  cap("reset");
+  cap("identify", distinctId(r), repProps(r));
+  toast(`Now viewing as ${r.name}`);
+  renderRep();
+  if (state.view === "read") { startVisit(); renderStats(); renderReaders(); renderSurvey(); }
+  else renderTeam();
+}
+function renderRep() {
+  const r = repById(state.rep);
+  const a = document.getElementById("repAv");
+  a.textContent = initials(r.name); a.style.background = r.c;
+  document.getElementById("repName").textContent = r.name;
+  document.getElementById("visitWho").textContent = r.name;
+}
+
+/* ---------- popovers ---------- */
+let kb = -1;
+const openPick = new Set();
+function placePop(pop, btn, alignRight) {
+  const rc = btn.getBoundingClientRect(), w = pop.offsetWidth, vw = document.documentElement.clientWidth;
+  const left = alignRight ? rc.right - w : rc.left;
+  pop.style.left = Math.max(16, Math.min(left, vw - w - 16)) + "px";
+}
+function openPop(id, trigger) {
+  closePops();
+  const pop = document.getElementById(id);
+  pop.hidden = false; document.getElementById("scrim").hidden = false;
+  if (id === "aboutPop") {
+    renderAbout();
+    const btn = trigger || document.getElementById("pocBtn");
+    document.getElementById("pocBtn").setAttribute("aria-expanded", "true");
+    if (btn.id === "pocBtn") { pop.style.top = ""; placePop(pop, btn, false); }
+    else { const rc = btn.getBoundingClientRect(); pop.style.top = Math.min(rc.bottom + 6, window.innerHeight - pop.offsetHeight - 12) + "px"; placePop(pop, btn, false); }
+    pop.querySelector("a").focus({ preventScroll: true });
+    return;
+  }
+  placePop(pop, document.getElementById(id === "docPop" ? "docBtn" : "repBtn"), id === "repPop");
+  if (id === "docPop") { const i = document.getElementById("docSearch"); i.value = ""; openPick.clear(); if (state.view === "read") openPick.add(docById(state.doc).cat); renderDocList(); i.focus(); }
+  else { renderRepList(); pop.querySelector(".opt").focus(); }
+}
+function closePops() { ["docPop", "repPop", "aboutPop", "scrim"].forEach(i => document.getElementById(i).hidden = true); document.getElementById("pocBtn").setAttribute("aria-expanded", "false"); }
+function renderDocList() {
+  const q = document.getElementById("docSearch").value.trim().toLowerCase();
+  let html = "", idx = 0;
+  CATS.forEach(c => {
+    const ds = docsIn(c.name).filter(d => !q || d.title.toLowerCase().includes(q) || d.path.includes(q) || c.name.toLowerCase().includes(q));
+    if (!ds.length) return;
+    const open = !!q || openPick.has(c.name), unread = ds.filter(d => !DATA[d.id][state.rep].views).length;
+    html += `<button class="grp-h" data-cat="${esc(c.name)}" aria-expanded="${open}"><svg class="caret" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M3 1.5 6.5 5 3 8.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="gn">${esc(c.name)}</span><span class="os">${ds.length} pages${unread ? ` · ${unread} unread` : ""}</span></button>`;
+    if (!open) return;
+    ds.forEach(d => {
+      const s = sumDoc(d.id), r = pct(s.engaged, s.views), unread = !DATA[d.id][state.rep].views;
+      html += `<button class="opt${idx === kb ? " kb" : ""}" data-doc="${d.id}" aria-current="${state.view === "read" && d.id === state.doc}">
+        <span class="ot"><span class="nm">${esc(d.title)}</span>${unread ? '<span class="newdot">UNREAD</span>' : ""}</span>
+        <span class="os"><span class="mini"><i style="width:${r}%"></i></span>${r}% engaged</span></button>`;
+      idx++;
+    });
+  });
+  document.getElementById("docList").innerHTML = html || `<div class="grp">No page matches "${esc(q)}"</div>`;
+  document.querySelectorAll("#docList .opt").forEach(b => b.onclick = () => openDoc(b.dataset.doc));
+  document.querySelectorAll("#docList .grp-h").forEach(b => b.onclick = () => {
+    const n = b.dataset.cat; openPick.has(n) ? openPick.delete(n) : openPick.add(n); renderDocList();
+  });
+}
+function renderRepList() {
+  document.getElementById("repList").innerHTML = REPS.map(r => `
+    <button class="opt rep-opt" data-rep="${r.id}" aria-current="${r.id === state.rep}">${av(r)}
+      <span><span class="ot"><span class="nm">${esc(r.name)}</span></span><span class="rr">${esc(r.role)}</span></span>
+      <span class="os">${r.id === state.rep ? "current" : ""}</span></button>`).join("");
+  document.querySelectorAll("#repList .opt").forEach(b => b.onclick = () => setRep(b.dataset.rep));
+}
+
+document.getElementById("docBtn").onclick = () => openPop("docPop");
+document.getElementById("repBtn").onclick = () => openPop("repPop");
+document.getElementById("pocBtn").onclick = () => openPop("aboutPop");
+document.getElementById("scrim").onclick = closePops;
+document.getElementById("docSearch").addEventListener("input", () => { kb = 0; renderDocList(); });
+document.getElementById("docSearch").addEventListener("keydown", e => {
+  const opts = [...document.querySelectorAll("#docList .opt")];
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); kb = Math.max(0, Math.min(opts.length - 1, kb + (e.key === "ArrowDown" ? 1 : -1))); renderDocList(); }
+  if (e.key === "Enter" && opts.length) openDoc(opts[Math.max(0, kb)].dataset.doc);
+});
+document.getElementById("vRead").onclick = () => setView("read");
+document.getElementById("vTeam").onclick = () => setView("team");
+document.getElementById("fab").onclick = () => { document.getElementById("drawer").hidden = false; renderEvents(); };
+document.getElementById("drawerClose").onclick = () => document.getElementById("drawer").hidden = true;
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") { closePops(); document.getElementById("drawer").hidden = true; }
+  const typing = /INPUT|TEXTAREA/.test(document.activeElement.tagName);
+  if (!typing && (e.key === "/" || (e.key === "k" && (e.metaKey || e.ctrlKey)))) { e.preventDefault(); kb = -1; openPop("docPop"); }
+});
+
+window.addEventListener("pagehide", () => endVisit());
+
+/* ---------- boot: auto sign-in as the default rep & sync PostHog stats ---------- */
+(async function boot() {
+  renderRep();
+  renderDocBtn();
+  renderTeam();
+  renderGitHub();
+  try {
+    // Relative URLs so the app also works from a subpath; API_BASE points static origins (GitHub Pages) at the live
+    // Netlify API (CORS-enabled). Only when no API is reachable (404 / network error) fall back to the committed
+    // snapshot and its public client config. A non-404 error from a reachable API is shown, never masked by the snapshot.
+    const get = u => fetch(u, { cache: "no-store" }).catch(() => null);
+    let [cfg, statsRes] = await Promise.all([
+      get(API_BASE + "api/config").then(r => r && r.ok ? r.json() : null).catch(() => null),
+      get(API_BASE + "api/stats"),
+    ]);
+    state.static = !statsRes || statsRes.status === 404;
+    if (state.static) {
+      statsRes = await fetch("data/stats-snapshot.json", { cache: "no-store" });
+      if (!cfg && statsRes.ok) cfg = (await statsRes.clone().json()).config || null;
+    }
+    state.surveyId = (cfg && cfg.surveyId) || null;
+    if (cfg && cfg.posthogKey && window.posthog && typeof window.posthog.init === "function") {
+      window.posthog.init(cfg.posthogKey, {
+        api_host: cfg.posthogHost || "https://us.i.posthog.com",
+        persistence: "memory",
+        autocapture: false,
+        capture_pageview: false,
+        capture_pageleave: false,
+        request_batching: false,
+      });
+    }
+    if (!statsRes.ok) {
+      const errBody = await statsRes.json().catch(() => ({}));
+      throw new Error(errBody.error || `HTTP ${statsRes.status}`);
+    }
+    const stats = await statsRes.json();
+    state.statsSource = stats.source || "posthog-cloud";
+    state.snapshotAt = stats.capturedAt || null;
+    state.projectId = stats.projectId || (cfg && cfg.projectId) || null;
+    state.statsError = null;
+    if (stats && stats.data) {
+      Object.keys(stats.data).forEach(k => { DATA[k] = stats.data[k]; });
+      if (stats.survey) Object.keys(stats.survey).forEach(k => { SURVEY[k] = stats.survey[k]; });
+      if (stats.missing) {
+        Object.keys(MISSING).forEach(k => delete MISSING[k]);
+        Object.keys(stats.missing).forEach(k => { MISSING[k] = stats.missing[k]; });
+      }
+    }
+  } catch (e) {
+    state.statsSource = "error";
+    state.statsError = String(e && e.message ? e.message : e);
+    if (!document.getElementById("aboutPop").hidden) renderAbout();
+    toast(`PostHog Cloud telemetry error: ${state.statsError}`);
+    console.error("boot sync error:", e);
+  }
+  state.statsLoading = false;
+  const r = repById(state.rep);
+  cap("identify", distinctId(r), repProps(r));
+  renderTeam();
+  if (state.view === "read") { renderStats(); renderReaders(); renderSurvey(); }
+  cap("capture", "$pageview", { $current_url: "/team-usage" });
+})();
+</script>

@@ -1,0 +1,27 @@
+{
+  "name": "posthog-handbook-signal",
+  "version": "1.0.0",
+  "description": "Independent Telemetry Layer PoC on top of PostHog/posthog.com — fetches handbook Markdown live from GitHub and pairs it with PostHog Cloud usage & survey analytics.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "python3 build2.py",
+    "provision": "node provision-posthog.js",
+    "seed": "node seed-posthog.js",
+    "snapshot": "node snapshot-stats.js",
+    "build:netlify": "node scripts/build-netlify.js",
+    "test": "node scripts/check-survey-escape.js"
+  },
+  "keywords": [
+    "posthog",
+    "sales-enablement",
+    "handbook",
+    "telemetry",
+    "hogql"
+  ],
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "posthog-js": "^1.438.21"
+  }
+}

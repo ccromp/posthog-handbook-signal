@@ -1,0 +1,10 @@
+node_modules/
+.env
+*.cookies.txt
+.posthog.cookies.txt
+.DS_Store
+__pycache__/
+data/live-events.json
+.orchestra-local-only
+dist/
+.netlify/
