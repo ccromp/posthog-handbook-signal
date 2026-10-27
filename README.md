@@ -1,5 +1,7 @@
 # Sales Enablement Signal
 
+**Live demo: [https://posthog-handbook-signal.netlify.app](https://posthog-handbook-signal.netlify.app)** (click any screenshot below to open it)
+
 ## Why I built this
 
 Anyone running a sales enablement program wants to know which resources (battlecards, launch briefs, messaging, docs, playbooks, etc.) reps actually rely on, which ones they bounce from quickly, where the coverage gaps are, and what moves the needle on a deal.
@@ -16,7 +18,7 @@ PostHog publishes its real sales, CS and positioning handbook openly at [`PostHo
 >
 > The rep switcher in the top bar is a **demo control**: it lets you switch between the five fictional reps in one browser and exercise the `posthog.reset()` and `posthog.identify()` flow for each. There is no login. A real deployment would require authentication (SSO) and identify the signed-in rep automatically, rather than running as an anonymous app with a user switcher.
 
-![Team view: category rollup, Bounce watch with rep quotes, and the Nobody opened these coverage gaps](docs/screenshots/04-team-usage.png)
+[![Team view: category rollup, Bounce watch with rep quotes, and the Nobody opened these coverage gaps](docs/screenshots/04-team-usage.png)](https://posthog-handbook-signal.netlify.app)
 
 *The Team view, where the app opens: usage by category, Bounce watch with the survey notes reps left, and the pages nobody opened in 30 days. The top bar shows `Search 121 pages` until a page is opened.*
 
@@ -52,7 +54,7 @@ The **Team** tab is the part a program owner would open on Monday morning. It tu
 - **Nobody opened these**: pages with zero views in 30 days.
 - **Who reads what**: engaged reads per category and rep, as a heatmap.
 
-![Who reads what: a category by rep heatmap of engaged reads](docs/screenshots/05-who-reads-what.png)
+[![Who reads what: a category by rep heatmap of engaged reads](docs/screenshots/05-who-reads-what.png)](https://posthog-handbook-signal.netlify.app)
 
 > The numbers in these screenshots are the seeded sample history plus a handful of real sessions on the demo instance, so they will not match a fresh install exactly.
 
@@ -65,7 +67,7 @@ Open any of the 121 pages (14 product-positioning pages from the marketing handb
 - **Who read it**: per-rep engaged reads, bounces and how long ago each rep last opened the page.
 - **A one-question survey**: *"Did this page help you on a live deal?"* with Yes / Partly / No and an optional *"What was missing for your deal?"* note.
 
-![Reading view: the Error tracking battlecard with the PoC tag, live provenance line and PostHog telemetry rail](docs/screenshots/01-reading-view.png)
+[![Reading view: the Error tracking battlecard with the PoC tag, live provenance line and PostHog telemetry rail](docs/screenshots/01-reading-view.png)](https://posthog-handbook-signal.netlify.app)
 
 *The Reading view for `Error tracking`, captured as one tall screenshot: the `PoC` tag and the live provenance line at the top, the handbook's messaging and the `vs Sentry` battle card below, and the right-hand rail of live PostHog data for this page (views, engaged reads, who read it, the survey and the GitHub discussion).*
 
@@ -76,13 +78,13 @@ The handbook is the source of truth, so the app is honest about that without pus
 - A compact **`PoC`** tag in the top bar opens an About popover with the three-step data flow, the page count, the fetch state of the current page and the PostHog Cloud project it reads from.
 - A single line under every title shows **`● Live from PostHog/posthog.com`** with direct links to the canonical `posthog.com/handbook/...` page and to the `.md` source on GitHub.
 
-![The About this proof of concept popover: PostHog/posthog.com to Sales Enablement Signal to PostHog Cloud](docs/screenshots/02-about-popover.png)
+[![The About this proof of concept popover: PostHog/posthog.com to Sales Enablement Signal to PostHog Cloud](docs/screenshots/02-about-popover.png)](https://posthog-handbook-signal.netlify.app)
 
 ### 4. A live view of exactly what is sent to PostHog
 
 The **Events** button opens a drawer that lists every `posthog.identify` and `posthog.capture` call the page makes in the current session, newest first, with the real property payloads. It makes the instrumentation easy to audit and easy to copy.
 
-![The PostHog event stream drawer showing identify, $pageview, enablement_engaged_read and enablement_section_viewed calls](docs/screenshots/03-event-stream.png)
+[![The PostHog event stream drawer showing identify, $pageview, enablement_engaged_read and enablement_section_viewed calls](docs/screenshots/03-event-stream.png)](https://posthog-handbook-signal.netlify.app)
 
 ## PostHog features used
 
